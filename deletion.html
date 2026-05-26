@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>REDACT // Deactivation Center</title>
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  
+  <!-- Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1" rel="stylesheet" />
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body class="bg-[#0B1020] text-[#F8FAFC]">
+  
+  <!-- Glowing Background Overlays -->
+  <div class="glow-shape w-[500px] h-[500px] top-12 left-10"></div>
+  <div class="glow-shape w-[400px] h-[400px] bottom-10 right-20"></div>
+
+  <!-- ==========================================
+       LEFT SIDEBAR NAVIGATION
+       ========================================== -->
+  <aside class="sidebar-wrapper">
+    <div class="space-y-8">
+      <!-- Brand Logo Header -->
+      <div class="flex items-center gap-2.5 px-2">
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#C4B5FD] opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-[#C4B5FD]"></span>
+        </span>
+        <div class="flex flex-col">
+          <span class="font-sans font-bold text-sm tracking-widest text-[#F8FAFC]">REDACT</span>
+          <span class="font-mono text-[8px] text-slate-500 uppercase tracking-widest mt-0.5">AI Privacy Intelligence</span>
+        </div>
+      </div>
+
+      <!-- Navigation links -->
+      <nav class="space-y-1.5 flex flex-col">
+        <a href="index.html" class="sidebar-nav-item">
+          <span class="material-symbols-outlined text-lg">dashboard</span>
+          Dashboard
+        </a>
+        <a href="atlas.html" class="sidebar-nav-item">
+          <span class="material-symbols-outlined text-lg">map</span>
+          Privacy Risk Atlas
+        </a>
+        <a href="shield.html" class="sidebar-nav-item">
+          <span class="material-symbols-outlined text-lg">shield</span>
+          REDACT Shield
+        </a>
+        <a href="intelligence.html" class="sidebar-nav-item">
+          <span class="material-symbols-outlined text-lg">insights</span>
+          Threat Intelligence
+        </a>
+        <a href="deletion.html" class="sidebar-nav-item active">
+          <span class="material-symbols-outlined text-lg">delete_forever</span>
+          Deletion Center
+        </a>
+        <a href="alerts.html" class="sidebar-nav-item">
+          <span class="material-symbols-outlined text-lg">notifications_active</span>
+          Alert Center
+        </a>
+      </nav>
+    </div>
+
+    <!-- Profile Widget -->
+    <div class="border-t border-white/5 pt-4 flex flex-col gap-3">
+      <div class="flex items-center gap-2.5 px-2">
+        <img class="user-avatar-display w-8 h-8 rounded-full border border-white/10" src="https://ui-avatars.com/api/?name=User&background=0F172A&color=C4B5FD" alt="User Avatar" />
+        <div class="flex flex-col text-left leading-tight truncate max-w-[150px]">
+          <span class="user-name-display text-xs font-semibold text-slate-200 truncate">Loading...</span>
+          <span class="user-email-display text-[9px] text-slate-500 font-mono truncate">secure@redact.ai</span>
+        </div>
+      </div>
+      <a href="/auth/logout" class="text-center py-2 bg-white/5 border border-white/5 hover:border-rose-500/30 hover:bg-rose-500/5 text-rose-400 font-sans font-bold text-xs rounded-xl transition-all duration-300">
+        Logout Session
+      </a>
+    </div>
+  </aside>
+
+  <!-- ==========================================
+       MAIN CONTENT PANEL
+       ========================================== -->
+  <main class="content-wrapper flex flex-col">
+    
+    <!-- Top Header Bar -->
+    <header class="flex justify-between items-center border-b border-white/5 pb-4 mb-8">
+      <div>
+        <h1 class="text-xl font-bold text-[#F8FAFC] tracking-tight">Privacy Deactivation Center</h1>
+        <p class="text-xs text-slate-500 mt-0.5">Secure, automated Right to be Forgotten cloud deletion requests.</p>
+      </div>
+      
+      <div class="flex items-center gap-4 text-xs font-mono text-slate-500">
+        <span id="session-timestamp">00:00:00 GMT</span>
+        <span class="flex items-center gap-1 bg-[#C4B5FD]/10 border border-[#C4B5FD]/20 px-2 py-0.5 rounded text-[9px] font-bold text-[#C4B5FD]">
+          SECURE PROTOCOLS
+        </span>
+      </div>
+    </header>
+
+    <!-- Content Workspace columns -->
+    <div class="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+      
+      <!-- Left Box: Targeted app profile card (5 cols) -->
+      <div class="xl:col-span-5 flex flex-col gap-6">
+        <div class="glass-panel p-6 bg-[#111827]/40 space-y-4">
+          <h3 class="font-mono text-[9px] text-slate-500 uppercase tracking-widest border-b border-white/5 pb-2">TARGET PLATFORM INDEX</h3>
+          
+          <!-- Dynamic card info -->
+          <div id="target-details-panel" class="space-y-4">
+            <div class="flex items-center gap-3">
+              <div id="target-icon-container" class="w-10 h-10 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center overflow-hidden">
+                <span class="material-symbols-outlined text-[#C4B5FD]">hub</span>
+              </div>
+              <div>
+                <h2 id="target-title" class="text-sm font-bold text-slate-100">Select Platform...</h2>
+                <span class="font-mono text-[9px] text-[#C4B5FD] uppercase tracking-wider">Identified linkage</span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3.5 border-t border-white/5 pt-4 text-xs font-sans">
+              <div>
+                <span class="font-mono text-[9px] text-slate-500 block uppercase tracking-wider">Connected Since</span>
+                <p id="target-since" class="text-slate-300 font-semibold mt-1">-</p>
+              </div>
+              <div>
+                <span class="font-mono text-[9px] text-slate-500 block uppercase tracking-wider">Last Active</span>
+                <p id="target-active" class="text-slate-300 font-semibold mt-1">-</p>
+              </div>
+              <div>
+                <span class="font-mono text-[9px] text-slate-500 block uppercase tracking-wider">Risk Level</span>
+                <p id="target-risk" class="text-slate-300 font-semibold mt-1">-</p>
+              </div>
+              <div>
+                <span class="font-mono text-[9px] text-slate-500 block uppercase tracking-wider">Connection Mode</span>
+                <p id="target-method" class="text-slate-300 font-semibold mt-1">-</p>
+              </div>
+            </div>
+            
+            <div class="bg-black/20 p-3 rounded-xl border border-white/5">
+              <span class="font-mono text-[8px] text-slate-500 block uppercase tracking-wider">Exposed Data Categories:</span>
+              <p id="target-retained-data" class="font-mono text-[10px] text-slate-300 mt-1.5 leading-normal">-</p>
+            </div>
+          </div>
+
+          <!-- Fallback prompt -->
+          <div id="target-fallback-prompt" class="hidden text-center py-6 text-slate-400 text-xs">
+            Please pick an exposed card on the <a href="index.html" class="text-[#C4B5FD] font-semibold hover:underline">Dashboard</a> to trigger deactivation.
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Box: Secure verification & action button (7 cols) -->
+      <div class="xl:col-span-7 flex flex-col gap-6">
+        
+        <!-- Verification card -->
+        <div class="glass-panel p-6 bg-[#111827]/40 space-y-6">
+          <div class="text-center space-y-2">
+            <h3 class="text-sm font-bold text-slate-100 uppercase tracking-wider">Secure Ownership Verification</h3>
+            <p class="text-xs text-slate-500 leading-relaxed max-w-sm mx-auto">
+              Operator authentication challenges confirm authorization ownership before executing permanent platform erasures.
+            </p>
+          </div>
+
+          <!-- Button to trigger sending code -->
+          <div class="flex justify-center">
+            <button id="send-code-btn" class="px-5 py-2.5 bg-white/5 border border-white/5 hover:border-[#C4B5FD]/30 hover:bg-[#C4B5FD]/5 text-xs text-[#C4B5FD] font-sans font-bold rounded-xl transition-all duration-300">
+              Request Verification Challenge Code
+            </button>
+          </div>
+
+          <!-- Digit inputs grid -->
+          <div class="space-y-4">
+            <span class="font-mono text-[9px] text-slate-500 block uppercase tracking-widest text-center">Challenge Code Inputs</span>
+            <div class="flex gap-2 justify-center">
+              <input class="otp-digit-box" type="text" maxlength="1" placeholder="-" />
+              <input class="otp-digit-box" type="text" maxlength="1" placeholder="-" />
+              <input class="otp-digit-box" type="text" maxlength="1" placeholder="-" />
+              <input class="otp-digit-box" type="text" maxlength="1" placeholder="-" />
+              <input class="otp-digit-box" type="text" maxlength="1" placeholder="-" />
+              <input class="otp-digit-box" type="text" maxlength="1" placeholder="-" />
+            </div>
+          </div>
+
+          <!-- Erase Action button -->
+          <button id="erase-btn" disabled class="btn-premium w-full py-4 text-slate-950 font-sans text-xs font-bold uppercase tracking-widest rounded-xl shadow-lg">
+            Authorize Deletion
+          </button>
+        </div>
+
+        <!-- Deactivation Progress panel (Hidden initially) -->
+        <div id="deactivation-progress-card" class="hidden glass-panel p-6 bg-[#111827]/40 space-y-5">
+          <div class="flex items-center gap-3.5 justify-center">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#C4B5FD] animate-ping"></span>
+            <h3 id="deactivation-progress-title" class="font-mono text-[9.5px] text-[#C4B5FD] uppercase tracking-widest font-bold">Broadcasting secure deactivation protocols...</h3>
+          </div>
+          <div class="progress-track max-w-sm mx-auto">
+            <div id="deactivation-bar" class="progress-bar-fill"></div>
+          </div>
+        </div>
+
+        <!-- Deactivation execution Console logs -->
+        <div class="glass-panel p-5 bg-black/40 space-y-3">
+          <h4 class="font-mono text-[9px] text-slate-500 uppercase tracking-widest border-b border-white/5 pb-2">DEACTIVATION LOG ENTRIES</h4>
+          <div id="deactivation-logs" class="h-36 overflow-y-auto space-y-2 pr-1 text-xs">
+            <div class="font-mono text-[11px] text-slate-500 italic select-none">No transactions active. Awaiting operator input...</div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ==========================================
+       MOBILE RESPONSIVE NAVIGATION BAR
+       ========================================== -->
+  <nav class="mobile-nav-bar">
+    <a href="index.html" class="mobile-nav-item">
+      <span class="material-symbols-outlined">dashboard</span>
+      Dashboard
+    </a>
+    <a href="atlas.html" class="mobile-nav-item">
+      <span class="material-symbols-outlined">map</span>
+      Atlas
+    </a>
+    <a href="shield.html" class="mobile-nav-item">
+      <span class="material-symbols-outlined">shield</span>
+      Shield
+    </a>
+    <a href="intelligence.html" class="mobile-nav-item">
+      <span class="material-symbols-outlined">insights</span>
+      Intel
+    </a>
+    <a href="deletion.html" class="mobile-nav-item active">
+      <span class="material-symbols-outlined">delete_forever</span>
+      Deletion
+    </a>
+    <a href="alerts.html" class="mobile-nav-item">
+      <span class="material-symbols-outlined">notifications_active</span>
+      Alerts
+    </a>
+  </nav>
+
+  <!-- Deletion flow JS script -->
+  <script>
+    let selectedPlatform = null;
+    let rawAccounts = [];
+
+    // Helper: Robust fetch with timeout & console telemetry
+    async function fetchWithTimeout(resource, options = {}) {
+      const { timeout = 12000 } = options; // Default 12s timeout
+      const controller = new AbortController();
+      const id = setTimeout(() => controller.abort(), timeout);
+      
+      console.log(`[API Request] ${options.method || 'GET'} ${resource} - Dispatching`);
+      try {
+        const response = await fetch(resource, {
+          ...options,
+          signal: controller.signal
+        });
+        clearTimeout(id);
+        console.log(`[API Response] ${options.method || 'GET'} ${resource} - Status: ${response.status}`);
+        return response;
+      } catch (error) {
+        clearTimeout(id);
+        console.error(`[API Error] ${options.method || 'GET'} ${resource} - Failed:`, error.message || error);
+        throw error;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      validateSession();
+      initLiveSessionClock();
+      initOTPInputs();
+      
+      const sendCodeBtn = document.getElementById('send-code-btn');
+      if (sendCodeBtn) {
+        sendCodeBtn.addEventListener('click', triggerVerificationCode);
+      }
+      
+      const eraseBtn = document.getElementById('erase-btn');
+      if (eraseBtn) {
+        eraseBtn.addEventListener('click', executeEraseSequence);
+      }
+    });
+
+    async function validateSession() {
+      try {
+        const userRes = await fetchWithTimeout('/api/user', { credentials: 'include', timeout: 5000 });
+        if (!userRes.ok) {
+          window.location.href = '/';
+          return;
+        }
+        const data = await userRes.json();
+        
+        // Populate profile sidebar fields
+        document.querySelectorAll('.user-name-display').forEach(el => el.innerText = data.name || 'REDACT Operator');
+        document.querySelectorAll('.user-email-display').forEach(el => el.innerText = data.email || 'secure@redact.ai');
+        document.querySelectorAll('.user-avatar-display').forEach(el => {
+          el.src = data.picture || 'https://ui-avatars.com/api/?name=User&background=0F172A&color=C4B5FD';
+        });
+
+        // Load report safely
+        try {
+          const reportRes = await fetchWithTimeout('/api/exposure-report', { credentials: 'include', timeout: 10000 });
+          if (reportRes.ok) {
+            const reportData = await reportRes.json();
+            rawAccounts = reportData.accounts || [];
+            parsePlatformQuery();
+          }
+        } catch (reportErr) {
+          console.error('Non-critical: Failed to pre-load exposure metrics on deletion view:', reportErr);
+        }
+      } catch (err) {
+        console.error('Session validation failure:', err);
+        window.location.href = '/';
+      }
+    }
+
+    function initLiveSessionClock() {
+      const clock = document.getElementById('session-timestamp');
+      function tick() {
+        const now = new Date();
+        clock.innerText = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')} GMT`;
+      }
+      setInterval(tick, 1000);
+      tick();
+    }
+
+    // App dynamic metadataPresets dictionary
+    const appPresets = {
+      swiggy: { name: 'Swiggy', date: '18 Apr 2022', active: '3 days ago', method: 'Gmail OAuth', data: ['Phone Number', 'Delivery Coordinates', 'Saved Credit Cards'] },
+      zomato: { name: 'Zomato', date: '04 Jan 2023', active: '5 days ago', method: 'Gmail OAuth', data: ['Phone Number', 'Billing Address', 'Purchase Frequency'] },
+      amazon: { name: 'Amazon', date: '09 Oct 2020', active: 'Yesterday', method: 'Gmail OAuth', data: ['Full Identity', 'Search History', 'Saved Cards', 'Address'] },
+      flipkart: { name: 'Flipkart', date: '12 Sep 2021', active: '6 days ago', method: 'OAuth Token', data: ['Phone Number', 'Home Address', 'Purchase History'] },
+      linkedin: { name: 'LinkedIn', date: '14 Feb 2020', active: 'Today', method: 'Gmail OAuth', data: ['Career Record', 'Network Graph', 'Email ID', 'Work Logs'] },
+      instagram: { name: 'Instagram', date: '12 Jan 2024', active: '3 days ago', method: 'OAuth Token', data: ['Biographical Data', 'Metadata Logs', 'Linked Phone'] },
+      netflix: { name: 'Netflix', date: '05 May 2021', active: '2 days ago', method: 'SMTP Password', data: ['Email address', 'Usage Patterns', 'Card Token'] },
+      discord: { name: 'Discord', date: '21 Jun 2020', active: '1 week ago', method: 'OAuth Gateway', data: ['Contact List', 'IP Log Details', 'Chat Metadata'] },
+      spotify: { name: 'Spotify', date: '30 Dec 2022', active: 'Today', method: 'OAuth Token', data: ['Personal preferences', 'Country code', 'Social circles'] },
+      uber: { name: 'Uber', date: '11 Mar 2021', active: 'Yesterday', method: 'OTP Code SMS', data: ['GPS History', 'Mobile ID', 'Receipt Logs'] },
+      telegram: { name: 'Telegram', date: '15 Aug 2022', active: '4 days ago', method: 'Secure OAuth', data: ['Contact Matrix', 'Linked Phone', 'Device Hardware'] },
+      myntra: { name: 'Myntra', date: '02 Oct 2021', active: '4 days ago', method: 'Gmail Auth', data: ['Phone number', 'Clothing preferences', 'Address'] },
+      adobe: { name: 'Adobe', date: '23 Jun 2019', active: '1 month ago', method: 'OAuth Token', data: ['Account emails', 'Creation tokens', 'Hardware ID'] },
+      canva: { name: 'Canva', date: '09 Jan 2022', active: '2 days ago', method: 'Gmail OAuth', data: ['Creation assets', 'Design metrics', 'Billing Info'] },
+      figma: { name: 'Figma', date: '17 Nov 2022', active: 'Today', method: 'OAuth Gateway', data: ['Collaborator nodes', 'Design logs', 'Profile Details'] },
+      udemy: { name: 'Udemy', date: '08 Dec 2021', active: '2 weeks ago', method: 'Gmail OAuth', data: ['Course transcripts', 'Certificates', 'Card details'] }
+    };
+
+    function parsePlatformQuery() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const plat = urlParams.get('platform');
+      
+      const detailsPanel = document.getElementById('target-details-panel');
+      const fallbackPrompt = document.getElementById('target-fallback-prompt');
+
+      if (!plat) {
+        detailsPanel.classList.add('hidden');
+        fallbackPrompt.classList.remove('hidden');
+        selectedPlatform = null;
+        return;
+      }
+
+      detailsPanel.classList.remove('hidden');
+      fallbackPrompt.classList.add('hidden');
+      selectedPlatform = plat;
+
+      // Lookup details
+      const key = plat.toLowerCase().trim();
+      const preset = appPresets[key] || {
+        name: plat.charAt(0).toUpperCase() + plat.slice(1),
+        date: '10 Jan 2023',
+        active: '4 days ago',
+        method: 'Secure SMTP Node',
+        data: ['Exposed Platform Cookies', 'Sign-up Headers']
+      };
+
+      document.getElementById('target-title').innerText = preset.name;
+      document.getElementById('target-since').innerText = preset.date;
+      document.getElementById('target-active').innerText = preset.active;
+      
+      // Pull risk level from account report if it exists
+      const match = rawAccounts.find(a => a.platform.toLowerCase() === key);
+      const risk = match ? match.risk : 'HIGH';
+      document.getElementById('target-risk').innerText = risk;
+      document.getElementById('target-method').innerText = preset.method;
+      document.getElementById('target-retained-data').innerText = preset.data.join(', ');
+
+      const domain = getPlatformDomain(plat);
+      document.getElementById('target-icon-container').innerHTML = `<img src="https://www.google.com/s2/favicons?sz=64&domain=${domain}" class="w-6 h-6 object-contain" onerror="this.outerHTML='<span class=\'material-symbols-outlined text-[#C4B5FD]\'>hub</span>'" />`;
+    }
+
+    function getPlatformDomain(platform) {
+      const p = platform.toLowerCase().trim();
+      if (p.includes('amazon')) return 'amazon.in';
+      if (p.includes('housing')) return 'housing.com';
+      return `${p}.com`;
+    }
+
+    // 3. OTP Box inputs forward backward handlers
+    function initOTPInputs() {
+      const inputs = document.querySelectorAll('.otp-digit-box');
+      
+      inputs.forEach((box, index) => {
+        box.addEventListener('input', (e) => {
+          const val = box.value;
+          if (val.length >= 1) {
+            box.value = val[0];
+            if (index < inputs.length - 1) {
+              inputs[index + 1].focus();
+            }
+          }
+          checkOTPValidity();
+        });
+
+        box.addEventListener('keydown', (e) => {
+          if (e.key === 'Backspace' && box.value === '' && index > 0) {
+            inputs[index - 1].focus();
+            inputs[index - 1].value = '';
+          }
+          checkOTPValidity();
+        });
+
+        box.addEventListener('paste', (e) => {
+          const pasted = (e.clipboardData || window.clipboardData).getData('text').trim();
+          if (pasted.length === 6 && /^\d+$/.test(pasted)) {
+            inputs.forEach((inp, idx) => {
+              inp.value = pasted[idx];
+            });
+            inputs[5].focus();
+            e.preventDefault();
+          }
+          checkOTPValidity();
+        });
+      });
+    }
+
+    function checkOTPValidity() {
+      const inputs = document.querySelectorAll('.otp-digit-box');
+      let otpCode = '';
+      inputs.forEach(inp => otpCode += inp.value || '');
+      
+      const eraseBtn = document.getElementById('erase-btn');
+      if (eraseBtn) {
+        eraseBtn.disabled = !selectedPlatform || otpCode.length < 6;
+      }
+    }
+
+    // 4. Send challenge OTP API
+    async function triggerVerificationCode() {
+      if (!selectedPlatform) {
+        alert('Please select a deactivation platform target.');
+        return;
+      }
+
+      addLogLine('info', 'Broadcasting secure credentials verification request...');
+
+      try {
+        const res = await fetchWithTimeout('/api/send-otp', {
+          method: 'POST',
+          credentials: 'include',
+          timeout: 8000
+        });
+
+        if (res.ok) {
+          addLogLine('success', 'Verification challenge code dispatched to Google account inbox.');
+          // Auto focus first OTP input
+          const inputs = document.querySelectorAll('.otp-digit-box');
+          inputs.forEach(inp => inp.value = '');
+          if (inputs[0]) inputs[0].focus();
+        } else {
+          throw new Error('Verification challenge dispatch failed.');
+        }
+      } catch (err) {
+        console.error('OTP send failed:', err);
+        addLogLine('error', `Handshake rejected: ${err.message}`);
+      }
+    }
+
+    // 5. Submit verify and stream deletion logs API
+    async function executeEraseSequence() {
+      const inputs = document.querySelectorAll('.otp-digit-box');
+      let otpCode = '';
+      inputs.forEach(inp => otpCode += inp.value || '');
+
+      if (otpCode.length < 6 || !selectedPlatform) return;
+
+      const eraseBtn = document.getElementById('erase-btn');
+      const progressCard = document.getElementById('deactivation-progress-card');
+      const progressBar = document.getElementById('deactivation-bar');
+      const progressLabel = document.getElementById('deactivation-progress-title');
+      const logsContainer = document.getElementById('deactivation-logs');
+
+      if (eraseBtn) eraseBtn.disabled = true;
+      if (progressCard) progressCard.classList.remove('hidden');
+      if (progressBar) progressBar.style.width = '0%';
+      if (logsContainer) logsContainer.innerHTML = '';
+
+      addLogLine('info', 'Verifying operator deactivation authority code...');
+
+      try {
+         // Step 1: Verify OTP
+        const verifyRes = await fetchWithTimeout('/api/verify-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ otp: otpCode }),
+          credentials: 'include',
+          timeout: 8000
+        });
+
+        if (!verifyRes.ok) {
+          throw new Error('Invalid verification challenge code. Authorization denied.');
+        }
+
+        addLogLine('success', 'Deactivation authority verified. Initializing secure browser pipeline...');
+        
+        // Progress steps animation
+        const steps = [
+          'Connecting to secure deactivation endpoints...',
+          'Bypassing platform advertising parameters...',
+          'Deleting linked device identifiers...',
+          'Permanent platform deactivation complete.'
+        ];
+        
+        let currentStep = 0;
+        const progressInterval = setInterval(() => {
+          if (currentStep < steps.length) {
+            progressLabel.innerText = steps[currentStep];
+            progressBar.style.width = `${((currentStep + 1) / steps.length) * 100}%`;
+            currentStep++;
+          } else {
+            clearInterval(progressInterval);
+          }
+        }, 800);
+
+        // Step 2: Purge Account stream logs
+        const purgeRes = await fetchWithTimeout('/api/purge-account', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ website: selectedPlatform, otp: otpCode }),
+          credentials: 'include',
+          timeout: 60000
+        });
+
+        if (!purgeRes.ok) {
+          clearInterval(progressInterval);
+          throw new Error(`Erasure stream failure: ${purgeRes.status}`);
+        }
+
+        const reader = purgeRes.body.getReader();
+        const decoder = new TextDecoder();
+        let partialChunk = '';
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          const chunk = decoder.decode(value, { stream: true });
+          const lines = (partialChunk + chunk).split('\n');
+          partialChunk = lines.pop();
+
+          for (const line of lines) {
+            if (line.trim()) {
+              try {
+                const logData = JSON.parse(line);
+                addLogLine(logData.type, logData.message);
+              } catch (e) {
+                addLogLine('info', line);
+              }
+            }
+          }
+        }
+
+        if (partialChunk.trim()) {
+          try {
+            const logData = JSON.parse(partialChunk);
+            addLogLine(logData.type, logData.message);
+          } catch (e) {
+            addLogLine('info', partialChunk);
+          }
+        }
+
+      } catch (err) {
+        console.error('Deactivation error:', err);
+        addLogLine('error', `Erasure sequence aborted: ${err.message}`);
+        if (eraseBtn) eraseBtn.disabled = false;
+        if (progressCard) progressCard.classList.add('hidden');
+      }
+    }
+
+    function addLogLine(type, message) {
+      const container = document.getElementById('deactivation-logs');
+      if (!container) return;
+
+      // Remove default empty info
+      if (container.firstElementChild && container.firstElementChild.classList.contains('italic')) {
+        container.innerHTML = '';
+      }
+
+      const logRow = document.createElement('div');
+      logRow.className = 'flex gap-2.5 font-mono text-[11px] items-start';
+      
+      let typeLabel = '[INFO]';
+      let colorClass = 'text-indigo-400';
+
+      if (type === 'error') {
+        typeLabel = '[FAIL]';
+        colorClass = 'text-rose-400';
+      } else if (type === 'success') {
+        typeLabel = '[OKAY]';
+        colorClass = 'text-emerald-400';
+      } else if (type === 'warn') {
+        typeLabel = '[WARN]';
+        colorClass = 'text-orange-400';
+      }
+
+      logRow.innerHTML = `
+        <span class="${colorClass} opacity-80 shrink-0 select-none">${typeLabel}</span>
+        <span class="text-slate-300 leading-normal">${message}</span>
+      `;
+
+      container.appendChild(logRow);
+      container.scrollTop = container.scrollHeight;
+    }
+  </script>
+</body>
+</html>

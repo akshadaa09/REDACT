@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>REDACT // Heatmap Intelligence</title>
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  
+  <!-- Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1" rel="stylesheet" />
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body class="bg-[#0B1020] text-[#F8FAFC]">
+  
+  <!-- Glowing Background Overlays -->
+  <div class="glow-shape w-[500px] h-[500px] top-12 left-10"></div>
+  <div class="glow-shape w-[400px] h-[400px] bottom-10 right-20"></div>
+
+  <!-- ==========================================
+       LEFT SIDEBAR NAVIGATION
+       ========================================== -->
+  <aside class="sidebar-wrapper">
+    <div class="space-y-8">
+      <!-- Brand Logo Header -->
+      <div class="flex items-center gap-2.5 px-2">
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#C4B5FD] opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-[#C4B5FD]"></span>
+        </span>
+        <div class="flex flex-col">
+          <span class="font-sans font-bold text-sm tracking-widest text-[#F8FAFC]">REDACT</span>
+          <span class="font-mono text-[8px] text-slate-500 uppercase tracking-widest mt-0.5">AI Privacy Intelligence</span>
+        </div>
+      </div>
+
+      <!-- Navigation links -->
+      <nav class="space-y-1.5 flex flex-col">
+        <a href="index.html" class="sidebar-nav-item">
+          <span class="material-symbols-outlined text-lg">dashboard</span>
+          Dashboard
+        </a>
+        <a href="heatmap.html" class="sidebar-nav-item active">
+          <span class="material-symbols-outlined text-lg">map</span>
+          Heatmap Intelligence
+        </a>
+        <a href="assistant.html" class="sidebar-nav-item">
+          <span class="material-symbols-outlined text-lg">smart_toy</span>
+          AI Sentinel
+        </a>
+        <a href="deletion.html" class="sidebar-nav-item">
+          <span class="material-symbols-outlined text-lg">delete_forever</span>
+          Deletion Center
+        </a>
+        <a href="alerts.html" class="sidebar-nav-item">
+          <span class="material-symbols-outlined text-lg">notifications_active</span>
+          Real-Time Alerts
+        </a>
+      </nav>
+    </div>
+
+    <!-- Active Profile Widget -->
+    <div class="border-t border-white/5 pt-4 flex flex-col gap-3">
+      <div class="flex items-center gap-2.5 px-2">
+        <img class="user-avatar-display w-8 h-8 rounded-full border border-white/10" src="https://ui-avatars.com/api/?name=User&background=0F172A&color=C4B5FD" alt="User Avatar" />
+        <div class="flex flex-col text-left leading-tight truncate max-w-[150px]">
+          <span class="user-name-display text-xs font-semibold text-slate-200 truncate">Loading...</span>
+          <span class="user-email-display text-[9px] text-slate-500 font-mono truncate">secure@redact.ai</span>
+        </div>
+      </div>
+      <a href="/auth/logout" class="text-center py-2 bg-white/5 border border-white/5 hover:border-rose-500/30 hover:bg-rose-500/5 text-rose-400 font-sans font-bold text-xs rounded-xl transition-all duration-300">
+        Logout Session
+      </a>
+    </div>
+  </aside>
+
+  <!-- ==========================================
+       MAIN CONTENT PANEL
+       ========================================== -->
+  <main class="content-wrapper">
+    
+    <!-- Top Header Bar -->
+    <header class="flex justify-between items-center border-b border-white/5 pb-4 mb-8">
+      <div>
+        <h1 class="text-xl font-bold text-[#F8FAFC] tracking-tight">Heatmap Intelligence</h1>
+        <p class="text-xs text-slate-500 mt-0.5">Interactive connected mapping of exposure density and data clusters.</p>
+      </div>
+      
+      <div class="flex items-center gap-4 text-xs font-mono text-slate-500">
+        <span id="session-timestamp">00:00:00 GMT</span>
+        <span class="flex items-center gap-1 bg-[#C4B5FD]/10 border border-[#C4B5FD]/20 px-2 py-0.5 rounded text-[9px] font-bold text-[#C4B5FD]">
+          VECTOR SCHEMES
+        </span>
+      </div>
+    </header>
+
+    <!-- Node Graph Container Card -->
+    <div class="node-graph-container glass-panel bg-[#111827]/40 relative">
+      <!-- High-fidelity HTML5 physics node canvas -->
+      <canvas id="node-canvas"></canvas>
+
+      <!-- Absolute Positioned Info overlay tooltip -->
+      <div id="map-tooltip" class="absolute hidden bg-slate-950/95 backdrop-blur border border-white/10 rounded-2xl p-4 w-64 shadow-2xl z-20 pointer-events-auto">
+        <h3 id="tt-platform" class="text-sm font-bold text-[#F8FAFC]">Platform</h3>
+        <div class="flex gap-2.5 mt-1.5 font-mono text-[9px] font-bold">
+          <span id="tt-risk" class="text-rose-400 uppercase">HIGH RISK</span>
+          <span id="tt-score" class="text-slate-400">80% EXPOSURE</span>
+        </div>
+        <div class="border-t border-white/5 mt-3 pt-2 text-[10.5px]">
+          <span class="font-mono text-[8px] text-slate-500 block uppercase tracking-wider">Retained Data Clusters:</span>
+          <p id="tt-data" class="text-slate-300 font-mono mt-0.5">Email history, search trackers</p>
+        </div>
+        <div id="tt-loc-container" class="border-t border-white/5 mt-3 pt-2 text-[10.5px] hidden">
+          <span class="font-mono text-[8px] text-slate-500 block uppercase tracking-wider">Security Auth Location:</span>
+          <p id="tt-location" class="text-rose-400 font-mono mt-0.5">Delhi, India</p>
+        </div>
+        <a id="tt-purge-btn" href="#" class="w-full text-center mt-4 py-2 bg-rose-500/10 border border-rose-500/30 text-rose-400 font-sans text-xs font-bold rounded-lg hover:bg-rose-500 hover:text-[#0B1020] transition-all duration-300 block">
+          Purge Platform Node
+        </a>
+      </div>
+      
+      <!-- Safe fallback notice if graph has not scanned -->
+      <div id="canvas-fallback" class="hidden absolute inset-0 flex flex-col items-center justify-center text-center p-8 bg-slate-950/90 z-10">
+        <span class="material-symbols-outlined text-4xl text-slate-500 mb-2">lock_open</span>
+        <h3 class="text-sm font-bold text-slate-300">Graph Database Vacant</h3>
+        <p class="text-xs text-slate-500 mt-1 max-w-xs leading-relaxed">
+          Please navigate to the <a href="index.html" class="text-[#C4B5FD] font-semibold hover:underline">Dashboard</a> and trigger an AI Privacy Scan to populate node maps.
+        </p>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ==========================================
+       MOBILE RESPONSIVE NAVIGATION BAR
+       ========================================== -->
+  <nav class="mobile-nav-bar">
+    <a href="index.html" class="mobile-nav-item">
+      <span class="material-symbols-outlined">dashboard</span>
+      Dashboard
+    </a>
+    <a href="heatmap.html" class="mobile-nav-item active">
+      <span class="material-symbols-outlined">map</span>
+      Heatmap
+    </a>
+    <a href="assistant.html" class="mobile-nav-item">
+      <span class="material-symbols-outlined">smart_toy</span>
+      AI Sentinel
+    </a>
+    <a href="deletion.html" class="mobile-nav-item">
+      <span class="material-symbols-outlined">delete_forever</span>
+      Deletion
+    </a>
+    <a href="alerts.html" class="mobile-nav-item">
+      <span class="material-symbols-outlined">notifications_active</span>
+      Alerts
+    </a>
+  </nav>
+
+  <!-- Physics Graph Javascript Engine -->
+  <script>
+    let canvas, ctx;
+    let nodes = [];
+    let hoveredNode = null;
+    let draggedNode = null;
+    let mouse = { x: 0, y: 0 };
+    let animationId = null;
+    let isResized = false;
+    let userEmail = 'secure@redact.ai';
+    let rawAccounts = [];
+
+    // Helper: Robust fetch with timeout & console telemetry
+    async function fetchWithTimeout(resource, options = {}) {
+      const { timeout = 12000 } = options; // Default 12s timeout
+      const controller = new AbortController();
+      const id = setTimeout(() => controller.abort(), timeout);
+      
+      console.log(`[API Request] ${options.method || 'GET'} ${resource} - Dispatching`);
+      try {
+        const response = await fetch(resource, {
+          ...options,
+          signal: controller.signal
+        });
+        clearTimeout(id);
+        console.log(`[API Response] ${options.method || 'GET'} ${resource} - Status: ${response.status}`);
+        return response;
+      } catch (error) {
+        clearTimeout(id);
+        console.error(`[API Error] ${options.method || 'GET'} ${resource} - Failed:`, error.message || error);
+        throw error;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      validateSession();
+      initLiveSessionClock();
+    });
+
+    // 1. Session verification & load data
+    async function validateSession() {
+      try {
+        const userRes = await fetchWithTimeout('/api/user', { credentials: 'include', timeout: 5000 });
+        if (!userRes.ok) {
+          window.location.href = '/';
+          return;
+        }
+        const userData = await userRes.json();
+        userEmail = userData.email || 'secure@redact.ai';
+        
+        // Populate profile sidebar fields
+        document.querySelectorAll('.user-name-display').forEach(el => el.innerText = userData.name || 'REDACT Operator');
+        document.querySelectorAll('.user-email-display').forEach(el => el.innerText = userData.email || 'secure@redact.ai');
+        document.querySelectorAll('.user-avatar-display').forEach(el => {
+          el.src = userData.picture || 'https://ui-avatars.com/api/?name=User&background=0F172A&color=C4B5FD';
+        });
+
+        // Load report safely
+        try {
+          const reportRes = await fetchWithTimeout('/api/exposure-report', { credentials: 'include', timeout: 10000 });
+          if (reportRes.ok) {
+            const reportData = await reportRes.json();
+            rawAccounts = reportData.accounts || [];
+            
+            if (rawAccounts.length === 0) {
+              document.getElementById('canvas-fallback').classList.remove('hidden');
+            } else {
+              initNodeGraph();
+            }
+          }
+        } catch (reportErr) {
+          console.error('Non-critical: Failed to pre-load exposure metrics for heatmap:', reportErr);
+        }
+      } catch (err) {
+        console.error('Session load failure:', err);
+        window.location.href = '/';
+      }
+    }
+
+    function initLiveSessionClock() {
+      const clock = document.getElementById('session-timestamp');
+      function tick() {
+        const now = new Date();
+        clock.innerText = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')} GMT`;
+      }
+      setInterval(tick, 1000);
+      tick();
+    }
+
+    // 2. Interactive Canvas physics setup
+    class VisualNode {
+      constructor(id, label, risk, threatScore, x, y, loginLocation) {
+        this.id = id;
+        this.label = label;
+        this.risk = risk;
+        this.threatScore = threatScore;
+        this.x = x;
+        this.y = y;
+        this.loginLocation = loginLocation;
+        this.vx = (Math.random() - 0.5) * 0.4;
+        this.vy = (Math.random() - 0.5) * 0.4;
+        this.radius = id === 'core' ? 36 : 26;
+        this.isCore = id === 'core';
+        this.image = null;
+        
+        if (!this.isCore) {
+          this.image = new Image();
+          this.image.src = `https://www.google.com/s2/favicons?sz=64&domain=${getDomainName(label)}`;
+        }
+      }
+
+      update(width, height) {
+        if (this === draggedNode) {
+          this.x = mouse.x;
+          this.y = mouse.y;
+          return;
+        }
+
+        if (this.isCore) {
+          // Attract back to center
+          this.x += (width / 2 - this.x) * 0.05;
+          this.y += (height / 2 - this.y) * 0.05;
+          return;
+        }
+
+        this.x += this.vx;
+        this.y += this.vy;
+
+        // Border bounce
+        if (this.x < this.radius + 20 || this.x > width - this.radius - 20) {
+          this.vx *= -1;
+          this.x = Math.max(this.radius + 20, Math.min(width - this.radius - 20, this.x));
+        }
+        if (this.y < this.radius + 20 || this.y > height - this.radius - 20) {
+          this.vy *= -1;
+          this.y = Math.max(this.radius + 20, Math.min(height - this.radius - 20, this.y));
+        }
+
+        // Core orbital spring force
+        const core = nodes.find(n => n.isCore);
+        if (core) {
+          const dx = core.x - this.x;
+          const dy = core.y - this.y;
+          const dist = Math.hypot(dx, dy);
+          const targetDist = 180 + (this.threatScore * 0.4);
+          
+          const spring = (dist - targetDist) * 0.0025;
+          this.vx += (dx / dist) * spring;
+          this.vy += (dy / dist) * spring;
+        }
+
+        // Avoid overlap with others
+        nodes.forEach(other => {
+          if (other === this) return;
+          const odx = other.x - this.x;
+          const ody = other.y - this.y;
+          const odist = Math.hypot(odx, ody);
+          const minDist = this.radius + other.radius + 35;
+          
+          if (odist < minDist) {
+            const repel = (minDist - odist) * 0.012;
+            this.vx -= (odx / odist) * repel;
+            this.vy -= (ody / odist) * repel;
+          }
+        });
+
+        // Cap speeds
+        const speed = Math.hypot(this.vx, this.vy);
+        if (speed > 1.2) {
+          this.vx = (this.vx / speed) * 1.2;
+          this.vy = (this.vy / speed) * 1.2;
+        }
+        
+        // Friction
+        this.vx *= 0.98;
+        this.vy *= 0.98;
+      }
+
+      draw(ctx) {
+        ctx.save();
+        
+        let strokeColor = '#CBD5E1'; // Slate white (Low)
+        if (this.risk === 'CRITICAL' || this.risk === 'HIGH') {
+          strokeColor = '#FB7185'; // Rose Red (High)
+        } else if (this.risk === 'MEDIUM') {
+          strokeColor = '#C4B5FD'; // Lavender (Medium)
+        }
+
+        const isHovered = this === hoveredNode;
+
+        // Draw soft glow behind active nodes
+        ctx.shadowBlur = isHovered ? 25 : 12;
+        ctx.shadowColor = strokeColor;
+        
+        ctx.fillStyle = '#111827';
+        ctx.strokeStyle = strokeColor;
+        ctx.lineWidth = isHovered ? 2.5 : 1.2;
+        
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        
+        ctx.shadowBlur = 0; // reset glow
+
+        if (this.isCore) {
+          // Draw user avatar inside central core circle
+          ctx.fillStyle = '#C4B5FD';
+          ctx.font = 'bold 9px "JetBrains Mono"';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText('CORE', this.x, this.y);
+        } else if (this.image && this.image.complete && this.image.naturalWidth !== 0) {
+          ctx.drawImage(this.image, this.x - 11, this.y - 11, 22, 22);
+        } else {
+          ctx.fillStyle = '#64748B';
+          ctx.font = 'bold 11px "JetBrains Mono"';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(this.label[0].toUpperCase(), this.x, this.y);
+        }
+
+        // Label caption
+        ctx.fillStyle = isHovered ? '#ffffff' : '#CBD5E1';
+        ctx.font = this.isCore ? 'bold 10px "Inter"' : '500 10px "Inter"';
+        ctx.textAlign = 'center';
+        ctx.fillText(this.isCore ? 'REDACT CORE' : this.label.toUpperCase(), this.x, this.y + this.radius + 15);
+
+        if (!this.isCore && this.loginLocation) {
+          ctx.fillStyle = isHovered ? '#C4B5FD' : '#94A3B8';
+          ctx.font = 'bold 8.5px "JetBrains Mono"';
+          ctx.fillText(`📍 ${this.loginLocation.toUpperCase()}`, this.x, this.y + this.radius + 26);
+        }
+
+        ctx.restore();
+      }
+    }
+
+    function getDomainName(platform) {
+      const p = platform.toLowerCase();
+      if (p.includes('amazon')) return 'amazon.in';
+      if (p.includes('housing')) return 'housing.com';
+      return `${p}.com`;
+    }
+
+    function initNodeGraph() {
+      canvas = document.getElementById('node-canvas');
+      ctx = canvas.getContext('2d');
+
+      // Prevent redundant event listener registrations
+      if (!canvas.dataset.listenersInitialized) {
+        canvas.addEventListener('mousemove', handleMouseMove);
+        canvas.addEventListener('mousedown', handleMouseDown);
+        canvas.addEventListener('mouseup', handleMouseUp);
+        canvas.addEventListener('mouseleave', handleMouseLeave);
+        window.addEventListener('resize', () => { isResized = true; });
+        canvas.dataset.listenersInitialized = 'true';
+      }
+
+      // Reset active animation frames and nodes cache
+      nodes = [];
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+      }
+
+      // Populate nodes
+      resizeCanvas();
+      
+      // Central Core node
+      const core = new VisualNode('core', userEmail, 'SAFE', 0, canvas.width / 2, canvas.height / 2, null);
+      nodes.push(core);
+
+      // Discovered Outer App nodes
+      rawAccounts.forEach((acc, idx) => {
+        const angle = (idx / rawAccounts.length) * Math.PI * 2;
+        const rad = 180 + Math.random() * 40;
+        const x = (canvas.width / 2) + Math.cos(angle) * rad;
+        const y = (canvas.height / 2) + Math.sin(angle) * rad;
+        
+        const node = new VisualNode(idx.toString(), acc.platform, acc.risk, acc.threatScore, x, y, acc.loginLocation);
+        nodes.push(node);
+      });
+
+      animate();
+    }
+
+    function resizeCanvas() {
+      const rect = canvas.parentElement.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height || 600;
+    }
+
+    function animate() {
+      if (isResized) {
+        resizeCanvas();
+        isResized = false;
+        // recenter core
+        const core = nodes.find(n => n.isCore);
+        if (core) {
+          core.x = canvas.width / 2;
+          core.y = canvas.height / 2;
+        }
+      }
+
+      const w = canvas.width;
+      const h = canvas.height;
+
+      // Draw background
+      ctx.fillStyle = '#0B1020';
+      ctx.fillRect(0, 0, w, h);
+
+      // Draw grids
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.015)';
+      ctx.lineWidth = 1;
+      const gridSize = 40;
+      for (let x = 0; x < w; x += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, h);
+        ctx.stroke();
+      }
+      for (let y = 0; y < h; y += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(w, y);
+        ctx.stroke();
+      }
+
+      const coreNode = nodes.find(n => n.isCore);
+
+      // Draw connecting lines with moving pulses first
+      nodes.forEach(node => {
+        if (node.isCore || !coreNode) return;
+        
+        ctx.save();
+        let pathColor = 'rgba(255, 255, 255, 0.05)';
+        if (node.risk === 'CRITICAL' || node.risk === 'HIGH') {
+          pathColor = 'rgba(251, 113, 133, 0.06)';
+        } else if (node.risk === 'MEDIUM') {
+          pathColor = 'rgba(196, 181, 253, 0.06)';
+        }
+
+        ctx.strokeStyle = pathColor;
+        ctx.lineWidth = node === hoveredNode ? 2 : 1;
+        ctx.beginPath();
+        ctx.moveTo(coreNode.x, coreNode.y);
+        ctx.lineTo(node.x, node.y);
+        ctx.stroke();
+
+        // Draw animated data stream pulse
+        const speed = Date.now() * 0.0015;
+        const ratio = (speed + parseInt(node.id) * 0.45) % 1.0;
+        
+        const px = coreNode.x + (node.x - coreNode.x) * ratio;
+        const py = coreNode.y + (node.y - coreNode.y) * ratio;
+
+        let pulseColor = '#CBD5E1';
+        if (node.risk === 'CRITICAL' || node.risk === 'HIGH') pulseColor = '#FB7185';
+        else if (node.risk === 'MEDIUM') pulseColor = '#C4B5FD';
+
+        ctx.fillStyle = pulseColor;
+        ctx.beginPath();
+        ctx.arc(px, py, 2.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.restore();
+      });
+
+      // Update & Draw nodes
+      nodes.forEach(node => {
+        node.update(w, h);
+        node.draw(ctx);
+      });
+
+      animationId = requestAnimationFrame(animate);
+    }
+
+    function handleMouseMove(e) {
+      const rect = canvas.getBoundingClientRect();
+      mouse.x = e.clientX - rect.left;
+      mouse.y = e.clientY - rect.top;
+
+      if (draggedNode) return;
+
+      let found = null;
+      for (let i = nodes.length - 1; i >= 0; i--) {
+        const node = nodes[i];
+        const dist = Math.hypot(node.x - mouse.x, node.y - mouse.y);
+        if (dist <= node.radius) {
+          found = node;
+          break;
+        }
+      }
+
+      hoveredNode = found;
+      canvas.style.cursor = found ? 'pointer' : 'grab';
+
+      // Update Tooltip
+      const tooltip = document.getElementById('map-tooltip');
+      if (tooltip) {
+        if (hoveredNode && !hoveredNode.isCore) {
+          const match = rawAccounts.find(a => a.platform === hoveredNode.label);
+          if (match) {
+            tooltip.style.display = 'block';
+            tooltip.style.left = `${e.clientX - rect.left + 15}px`;
+            tooltip.style.top = `${e.clientY - rect.top + 15}px`;
+
+            document.getElementById('tt-platform').innerText = match.platform;
+            document.getElementById('tt-risk').innerText = `${match.risk} RISK`;
+            document.getElementById('tt-score').innerText = `${match.threatScore}% EXPOSURE`;
+            document.getElementById('tt-data').innerText = match.retainedData ? match.retainedData.join(', ') : 'Email ID, access keys';
+            
+            const locContainer = document.getElementById('tt-loc-container');
+            const locEl = document.getElementById('tt-location');
+            if (locContainer && locEl) {
+              if (match.loginLocation) {
+                locEl.innerText = match.loginLocation;
+                locContainer.classList.remove('hidden');
+              } else {
+                locContainer.classList.add('hidden');
+              }
+            }
+            
+            document.getElementById('tt-purge-btn').href = `deletion.html?platform=${encodeURIComponent(match.platform)}`;
+          }
+        } else {
+          tooltip.style.display = 'none';
+        }
+      }
+    }
+
+    function handleMouseDown(e) {
+      if (hoveredNode) {
+        draggedNode = hoveredNode;
+        canvas.style.cursor = 'grabbing';
+      }
+    }
+
+    function handleMouseUp() {
+      draggedNode = null;
+      canvas.style.cursor = hoveredNode ? 'pointer' : 'grab';
+    }
+
+    function handleMouseLeave() {
+      hoveredNode = null;
+      draggedNode = null;
+      const tooltip = document.getElementById('map-tooltip');
+      if (tooltip) tooltip.style.display = 'none';
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>REDACT // Shield Console</title>
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  
+  <!-- Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1" rel="stylesheet" />
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body class="bg-[#0B1020] text-[#F8FAFC]">
+  
+  <!-- Glowing Background Overlays -->
+  <div class="glow-shape w-[500px] h-[500px] top-12 left-10"></div>
+  <div class="glow-shape w-[400px] h-[400px] bottom-10 right-20"></div>
+
+  <!-- ==========================================
+       LEFT SIDEBAR NAVIGATION
+       ========================================== -->
+  <aside class="sidebar-wrapper">
+    <div class="space-y-8">
+      <!-- Brand Logo Header -->
+      <div class="flex items-center gap-2.5 px-2">
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#C4B5FD] opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-[#C4B5FD]"></span>
+        </span>
+        <div class="flex flex-col">
+          <span class="font-sans font-bold text-sm tracking-widest text-[#F8FAFC]">REDACT</span>
+          <span class="font-mono text-[8px] text-slate-500 uppercase tracking-widest mt-0.5">AI Privacy Intelligence</span>
+        </div>
+      </div>
+
+      <!-- Navigation links -->
+      <nav class="space-y-1.5 flex flex-col">
+        <a href="index.html" class="sidebar-nav-item">
+          <span class="material-symbols-outlined text-lg">dashboard</span>
+          Dashboard
+        </a>
+        <a href="atlas.html" class="sidebar-nav-item">
+          <span class="material-symbols-outlined text-lg">map</span>
+          Privacy Risk Atlas
+        </a>
+        <a href="shield.html" class="sidebar-nav-item active">
+          <span class="material-symbols-outlined text-lg">shield</span>
+          REDACT Shield
+        </a>
+        <a href="intelligence.html" class="sidebar-nav-item">
+          <span class="material-symbols-outlined text-lg">insights</span>
+          Threat Intelligence
+        </a>
+        <a href="deletion.html" class="sidebar-nav-item">
+          <span class="material-symbols-outlined text-lg">delete_forever</span>
+          Deletion Center
+        </a>
+        <a href="alerts.html" class="sidebar-nav-item">
+          <span class="material-symbols-outlined text-lg">notifications_active</span>
+          Alert Center
+        </a>
+      </nav>
+    </div>
+
+    <!-- Active Profile Widget -->
+    <div class="border-t border-white/5 pt-4 flex flex-col gap-3">
+      <div class="flex items-center gap-2.5 px-2">
+        <img class="user-avatar-display w-8 h-8 rounded-full border border-white/10" src="https://ui-avatars.com/api/?name=User&background=0F172A&color=C4B5FD" alt="User Avatar" />
+        <div class="flex flex-col text-left leading-tight truncate max-w-[150px]">
+          <span class="user-name-display text-xs font-semibold text-slate-200 truncate">Loading...</span>
+          <span class="user-email-display text-[9px] text-slate-500 font-mono truncate">secure@redact.ai</span>
+        </div>
+      </div>
+      <a href="/auth/logout" class="text-center py-2 bg-white/5 border border-white/5 hover:border-rose-500/30 hover:bg-rose-500/5 text-rose-400 font-sans font-bold text-xs rounded-xl transition-all duration-300">
+        Logout Session
+      </a>
+    </div>
+  </aside>
+
+  <!-- ==========================================
+       MAIN CONTENT PANEL
+       ========================================== -->
+  <main class="content-wrapper">
+    
+    <!-- Top Header Bar -->
+    <header class="flex justify-between items-center border-b border-white/5 pb-4 mb-6">
+      <div>
+        <h1 class="text-xl font-bold text-[#F8FAFC] tracking-tight">REDACT Shield</h1>
+        <p class="text-xs text-slate-500 mt-0.5">Real-time anti-fingerprinting, request intercepts, and tracking blocking.</p>
+      </div>
+      
+      <div class="flex items-center gap-4 text-xs font-mono text-slate-500">
+        <span id="session-timestamp">00:00:00 GMT</span>
+        <span class="flex items-center gap-1.5 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-lg text-[10px] font-bold text-emerald-400 tracking-wider font-mono">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          SHIELD PROTECTED
+        </span>
+      </div>
+    </header>
+
+    <!-- Content Row -->
+    <div class="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+      
+      <!-- Left: Toggles & Stats (7 cols) -->
+      <div class="xl:col-span-7 space-y-6">
+        
+        <!-- Stats Row -->
+        <div class="grid grid-cols-3 gap-4 select-none">
+          <div class="glass-panel p-4 bg-emerald-500/5 border-emerald-500/15 flex flex-col justify-between">
+            <span class="metadata-text text-emerald-400 uppercase text-[9px] font-bold">Trackers Blocked</span>
+            <span id="stat-trackers" class="card-title text-slate-200 font-mono mt-3 text-xl">14,295</span>
+          </div>
+          <div class="glass-panel p-4 bg-emerald-500/5 border-emerald-500/15 flex flex-col justify-between">
+            <span class="metadata-text text-emerald-400 uppercase text-[9px] font-bold">Fingerprints Spoofed</span>
+            <span id="stat-fingerprints" class="card-title text-slate-200 font-mono mt-3 text-xl">2,840</span>
+          </div>
+          <div class="glass-panel p-4 bg-emerald-500/5 border-emerald-500/15 flex flex-col justify-between">
+            <span class="metadata-text text-emerald-400 uppercase text-[9px] font-bold">Leak Intercepts</span>
+            <span id="stat-leak" class="card-title text-slate-200 font-mono mt-3 text-xl">412</span>
+          </div>
+        </div>
+
+        <!-- Controls panel -->
+        <div class="glass-panel p-6 bg-[#111827]/40 space-y-6">
+          <h3 class="font-mono text-[9px] text-[#C4B5FD] uppercase tracking-widest border-b border-white/5 pb-2">SHIELD PROTECTION SCHEMES</h3>
+          
+          <div class="space-y-5">
+            <!-- Toggle 1 -->
+            <div class="flex justify-between items-start gap-4">
+              <div class="space-y-1">
+                <h4 class="font-bold text-slate-200 text-sm">Anti-Fingerprinting Layer</h4>
+                <p class="text-[11px] text-slate-500 leading-normal">Spoofs canvas signatures, system fonts, and navigator user-agent to mask system profiles.</p>
+              </div>
+              <label class="relative inline-flex items-center cursor-pointer mt-1">
+                <input type="checkbox" checked class="sr-only peer" />
+                <div class="w-9 h-5 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-400 after:border-slate-400 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500 peer-checked:after:bg-slate-950 peer-checked:after:border-slate-950"></div>
+              </label>
+            </div>
+
+            <!-- Toggle 2 -->
+            <div class="flex justify-between items-start gap-4 border-t border-white/5 pt-4">
+              <div class="space-y-1">
+                <h4 class="font-bold text-slate-200 text-sm">Ad & Tracker Blocker</h4>
+                <p class="text-[11px] text-slate-500 leading-normal">Blocks invasive tracking scripts, telemetry pixels, and analytic connections dynamically.</p>
+              </div>
+              <label class="relative inline-flex items-center cursor-pointer mt-1">
+                <input type="checkbox" checked class="sr-only peer" />
+                <div class="w-9 h-5 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-400 after:border-slate-400 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500 peer-checked:after:bg-slate-950 peer-checked:after:border-slate-950"></div>
+              </label>
+            </div>
+
+            <!-- Toggle 3 -->
+            <div class="flex justify-between items-start gap-4 border-t border-white/5 pt-4">
+              <div class="space-y-1">
+                <h4 class="font-bold text-slate-200 text-sm">Autofill Leakage Interceptor</h4>
+                <p class="text-[11px] text-slate-500 leading-normal">Detects hidden credential fields in forms and prevents browser automated snooping breaches.</p>
+              </div>
+              <label class="relative inline-flex items-center cursor-pointer mt-1">
+                <input type="checkbox" checked class="sr-only peer" />
+                <div class="w-9 h-5 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-400 after:border-slate-400 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500 peer-checked:after:bg-slate-950 peer-checked:after:border-slate-950"></div>
+              </label>
+            </div>
+
+            <!-- Toggle 4 -->
+            <div class="flex justify-between items-start gap-4 border-t border-white/5 pt-4">
+              <div class="space-y-1">
+                <h4 class="font-bold text-slate-200 text-sm">Strict HTTPS Enforcer</h4>
+                <p class="text-[11px] text-slate-500 leading-normal">Enforces secure HTTPS connections globally and filters insecure handshakes.</p>
+              </div>
+              <label class="relative inline-flex items-center cursor-pointer mt-1">
+                <input type="checkbox" checked class="sr-only peer" />
+                <div class="w-9 h-5 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-400 after:border-slate-400 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500 peer-checked:after:bg-slate-950 peer-checked:after:border-slate-950"></div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right: Real-time Terminal Log (5 cols) -->
+      <div class="xl:col-span-5 space-y-6">
+        <div class="glass-panel p-5 bg-black/45 space-y-4">
+          <div class="flex justify-between items-center border-b border-white/5 pb-2">
+            <h4 class="font-mono text-[9px] text-[#C4B5FD] uppercase tracking-widest">SHIELD SYSTEM LOG</h4>
+            <span class="flex h-1.5 w-1.5 relative">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-400"></span>
+            </span>
+          </div>
+
+          <div id="log-terminal" class="h-96 overflow-y-auto space-y-2 pr-1 text-xs select-none">
+            <!-- Simulated logs -->
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      validateSession();
+      initLiveSessionClock();
+      startSimulatedLogs();
+      startSimulatedStats();
+    });
+
+    async function validateSession() {
+      try {
+        const userRes = await fetch('/api/user');
+        if (!userRes.ok) {
+          window.location.href = '/';
+          return;
+        }
+        const data = await userRes.json();
+        
+        document.querySelectorAll('.user-name-display').forEach(el => el.innerText = data.name || 'REDACT Operator');
+        document.querySelectorAll('.user-email-display').forEach(el => el.innerText = data.email || 'secure@redact.ai');
+        document.querySelectorAll('.user-avatar-display').forEach(el => {
+          el.src = data.picture || 'https://ui-avatars.com/api/?name=User&background=0F172A&color=C4B5FD';
+        });
+      } catch (err) {
+        console.error('Session validation failure:', err);
+        window.location.href = '/';
+      }
+    }
+
+    function initLiveSessionClock() {
+      const clock = document.getElementById('session-timestamp');
+      function tick() {
+        const now = new Date();
+        clock.innerText = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')} GMT`;
+      }
+      setInterval(tick, 1000);
+      tick();
+    }
+
+    function startSimulatedLogs() {
+      const terminal = document.getElementById('log-terminal');
+      const domains = ['doubleclick.net', 'google-analytics.com', 'facebook.com/tr', 'quora.com/pixel', 'linkedin.com/collector', 'hotjar.com', 'segment.io', 'mixpanel.com', 'ads-twitter.com'];
+      const actions = [
+        { type: 'BLOCK', msg: 'Network tracking request intercepted', color: 'text-emerald-400' },
+        { type: 'SPOOF', msg: 'Canvas font profile spoofed', color: 'text-indigo-400' },
+        { type: 'FILTER', msg: 'Secured non-SSL request upgraded to HTTPS', color: 'text-amber-400' },
+        { type: 'SHIELD', msg: 'Form autocomplete credential harvesting blocked', color: 'text-rose-400' }
+      ];
+
+      function addLog() {
+        if (!terminal) return;
+        
+        const action = actions[Math.floor(Math.random() * actions.length)];
+        const domain = domains[Math.floor(Math.random() * domains.length)];
+        const logRow = document.createElement('div');
+        logRow.className = 'flex gap-2 font-mono text-[11px] items-start';
+        
+        const timestamp = new Date().toLocaleTimeString('en-US', { hour12: false });
+
+        logRow.innerHTML = `
+          <span class="text-slate-600 shrink-0">[${timestamp}]</span>
+          <span class="${action.color} font-bold shrink-0">[${action.type}]</span>
+          <span class="text-slate-300 leading-normal">${action.msg}: <span class="text-slate-400 underline decoration-white/10 font-bold select-all">${domain}</span></span>
+        `;
+        
+        terminal.appendChild(logRow);
+        
+        // Cap lines at 40
+        if (terminal.children.length > 40) {
+          terminal.removeChild(terminal.firstElementChild);
+        }
+        terminal.scrollTop = terminal.scrollHeight;
+      }
+
+      setInterval(addLog, 1200);
+      for (let i = 0; i < 15; i++) addLog();
+    }
+
+    function startSimulatedStats() {
+      const blockers = document.getElementById('stat-trackers');
+      const fingerprints = document.getElementById('stat-fingerprints');
+      const leaks = document.getElementById('stat-leak');
+
+      let blockCount = 14295;
+      let fingerCount = 2840;
+      let leakCount = 412;
+
+      setInterval(() => {
+        if (Math.random() > 0.3) {
+          blockCount += Math.floor(Math.random() * 3) + 1;
+          blockers.innerText = blockCount.toLocaleString();
+        }
+        if (Math.random() > 0.8) {
+          fingerCount += 1;
+          fingerprints.innerText = fingerCount.toLocaleString();
+        }
+        if (Math.random() > 0.9) {
+          leakCount += 1;
+          leaks.innerText = leakCount.toLocaleString();
+        }
+      }, 1000);
+    }
+  </script>
+</body>
+</html>

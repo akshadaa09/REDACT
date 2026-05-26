@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>REDACT // AI Privacy Intelligence Platform</title>
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  
+  <!-- Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1" rel="stylesheet" />
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body class="bg-[#0B1020] text-[#F8FAFC]">
+  
+  <!-- Subtle High-Performance Grid Overlay -->
+  <div class="grid-overlay"></div>
+
+  <!-- ==========================================
+       LEFT SIDEBAR NAVIGATION (Sidebar font: 15px)
+       ========================================== -->
+  <aside class="sidebar-wrapper">
+    <div class="space-y-10">
+      <!-- Brand Logo Header -->
+      <div class="sidebar-brand px-2">
+        <span class="relative flex h-2.5 w-2.5">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#C4B5FD] opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#C4B5FD]"></span>
+        </span>
+        <div class="flex flex-col">
+          <span class="font-sans font-bold text-sm tracking-wider text-[#F8FAFC]">REDACT</span>
+          <span class="metadata-text text-[9px] text-slate-500 uppercase tracking-widest mt-0.5">AI Privacy Intelligence</span>
+        </div>
+      </div>
+
+      <!-- Navigation links (Fixed at 15px inside styles.css) -->
+      <nav class="space-y-2 flex flex-col">
+        <a href="index.html" class="sidebar-nav-item active">
+          <span class="material-symbols-outlined text-lg">dashboard</span>
+          Dashboard
+        </a>
+        <a href="atlas.html" class="sidebar-nav-item">
+          <span class="material-symbols-outlined text-lg">map</span>
+          Privacy Risk Atlas
+        </a>
+        <a href="shield.html" class="sidebar-nav-item">
+          <span class="material-symbols-outlined text-lg">shield</span>
+          REDACT Shield
+        </a>
+        <a href="intelligence.html" class="sidebar-nav-item">
+          <span class="material-symbols-outlined text-lg">insights</span>
+          Threat Intelligence
+        </a>
+        <a href="deletion.html" class="sidebar-nav-item">
+          <span class="material-symbols-outlined text-lg">delete_forever</span>
+          Deletion Center
+        </a>
+        <a href="alerts.html" class="sidebar-nav-item">
+          <span class="material-symbols-outlined text-lg">notifications_active</span>
+          Alert Center
+        </a>
+      </nav>
+    </div>
+
+    <!-- Active Profile & Logout Widget -->
+    <div class="border-t border-white/5 pt-6 flex flex-col gap-4">
+      <div class="flex items-center gap-3 px-2">
+        <img class="user-avatar-display w-9 h-9 rounded-full border border-white/10" src="https://ui-avatars.com/api/?name=User&background=0F172A&color=C4B5FD" alt="User Avatar" />
+        <div class="flex flex-col text-left leading-tight truncate max-w-[155px]">
+          <span class="user-name-display text-xs font-semibold text-slate-200 truncate">Loading...</span>
+          <span class="user-email-display metadata-text text-slate-500 truncate" style="font-size: 11px;">secure@redact.ai</span>
+        </div>
+      </div>
+      <a href="/auth/logout" class="text-center py-2.5 bg-white/5 border border-white/5 hover:border-rose-500/30 hover:bg-rose-500/5 text-rose-400 font-sans font-bold text-xs rounded-xl transition-all duration-200">
+        Logout Session
+      </a>
+    </div>
+  </aside>
+
+  <!-- ==========================================
+       MAIN CONTENT PANEL
+       ========================================== -->
+  <main class="content-wrapper">
+    
+    <!-- Top Header Bar -->
+    <header class="flex justify-between items-center border-b border-white/5 pb-5 mb-6">
+      <div>
+        <h1 class="hero-title" style="font-size: 36px; font-weight: 800;">Dashboard Command Center</h1>
+        <p class="body-main text-slate-400 mt-1">Automated tracking, scoring, and platform exposures index.</p>
+      </div>
+      
+      <!-- Top Right Telemetry Details -->
+      <div class="flex items-center gap-4 text-xs font-mono text-slate-500">
+        <span id="current-quote-date" class="metadata-text">May 26, 2026</span>
+        <span class="flex items-center gap-1.5 bg-[#C4B5FD]/10 border border-[#C4B5FD]/20 px-3 py-1 rounded-lg text-[10px] font-bold text-[#C4B5FD] tracking-wider font-mono">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+          SECURE CHANNEL
+        </span>
+      </div>
+    </header>
+
+    <!-- Center Section: Premium Minimal Quote Banner -->
+    <div class="glass-panel mb-6 flex justify-between items-center bg-[#C4B5FD]/5 border-[#C4B5FD]/15 relative overflow-hidden select-none" style="padding: 20px 24px;">
+      <div class="space-y-1">
+        <span class="metadata-text text-[#C4B5FD] uppercase tracking-wider block font-bold">Platform Insight</span>
+        <p class="body-main text-slate-300 italic">"Your digital shadow is larger than you think." — AI Sentinel</p>
+      </div>
+      <span class="material-symbols-outlined text-[#C4B5FD]/10 text-4xl block absolute -right-2 -bottom-2">format_quote</span>
+    </div>
+
+    <!-- Main Workspace Content Grids -->
+    <div class="space-y-6">
+      
+      <!-- Row 1: Exposure stats & triggers -->
+      <div class="grid grid-cols-1 xl:grid-cols-12 gap-8">
+        
+        <!-- Left: Exposure Gauge Card (5 cols) -->
+        <div class="xl:col-span-5 flex flex-col gap-6">
+          <div class="glass-panel flex flex-col items-center justify-center text-center" style="padding: 24px;">
+            <h3 class="metadata-text text-slate-500 uppercase tracking-widest mb-6">PRIVACY INDEX SCORE</h3>
+            
+            <div class="gauge-container">
+              <svg class="gauge-svg">
+                <circle class="gauge-bg" cx="110" cy="110" r="88" />
+                <circle id="gauge-indicator" class="gauge-progress" cx="110" cy="110" r="88" stroke-dasharray="552.92" stroke-dashoffset="552.92" />
+              </svg>
+              <div class="absolute flex flex-col items-center justify-center">
+                <span id="exposure-score-val" class="font-mono text-5xl font-bold text-[#F8FAFC]">0</span>
+                <span id="exposure-status-val" class="metadata-text text-slate-400 tracking-[0.1em] mt-2 uppercase">SCAN REQUIRED</span>
+              </div>
+            </div>
+            
+            <p class="metadata-text text-slate-500 mt-6 tracking-wide uppercase">Exposure rating score</p>
+          </div>
+
+          <!-- Start AI Privacy Scan Trigger (Font size: 16px semi-bold) -->
+          <button id="start-scan-btn" class="btn-premium w-full active:scale-[0.99]" style="font-weight: 600;">
+            START AI PRIVACY SCAN
+          </button>
+        </div>
+
+        <!-- Right: Metrics Counters & Timeline (7 cols) -->
+        <div class="xl:col-span-7 flex flex-col gap-6 justify-between">
+          
+          <!-- Scan Progress Timeline Panel (Hidden initially) -->
+          <div id="scan-progress-panel" class="hidden glass-panel border-[#C4B5FD]/20 bg-[#C4B5FD]/5 space-y-4" style="padding: 24px;">
+            <div class="flex justify-between items-center text-xs font-mono">
+              <span id="scan-timeline-text" class="metadata-text text-slate-300 uppercase tracking-wider">Initializing AI footprint scanner...</span>
+              <span id="scan-progress-percent" class="metadata-text text-[#C4B5FD] font-bold">0%</span>
+            </div>
+            <div class="progress-track">
+              <div id="scan-progress-bar-fill" class="progress-bar-fill"></div>
+            </div>
+          </div>
+
+          <!-- General Telemetry cards grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 h-full">
+                        <!-- Metrics Card 1 -->
+            <div class="glass-panel flex flex-col justify-between" style="padding: 24px;">
+              <div>
+                <span class="material-symbols-outlined text-[#C4B5FD] text-xl">mail</span>
+                <h4 class="metadata-text text-slate-500 uppercase tracking-widest mt-2">Threat Activity</h4>
+              </div>
+              <span id="stat-parsed-count" class="card-title text-slate-200 mt-4">Active Monitor</span>
+            </div>
+
+            <!-- Metrics Card 2 -->
+            <div class="glass-panel flex flex-col justify-between" style="padding: 24px;">
+              <div>
+                <span class="material-symbols-outlined text-[#C4B5FD] text-xl">fingerprint</span>
+                <h4 class="metadata-text text-slate-500 uppercase tracking-widest mt-2">Discovered</h4>
+              </div>
+              <span id="stat-footprints-count" class="card-title text-slate-200 mt-4">0 Platforms</span>
+            </div>
+
+            <!-- Metrics Card 3 -->
+            <div class="glass-panel flex flex-col justify-between" style="padding: 24px;">
+              <div>
+                <span class="material-symbols-outlined text-rose-400 text-xl">report_problem</span>
+                <h4 class="metadata-text text-slate-500 uppercase tracking-widest mt-2">Threat Nodes</h4>
+              </div>
+              <span id="stat-threats-count" class="card-title text-slate-200 mt-4">0 Critical</span>
+            </div>
+
+          </div>
+
+          <!-- Activity History timeline widget -->
+          <div class="glass-panel space-y-4" style="padding: 24px;">
+            <h4 class="metadata-text text-slate-500 uppercase tracking-widest border-b border-white/5 pb-2.5">ACTIVE INTELLIGENCE ENGINES</h4>
+            <div class="space-y-3 text-xs leading-normal font-sans">
+              <div class="flex gap-3 items-center">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                <p class="body-main text-slate-300">Identity Shield: <span class="metadata-text text-slate-500">Secure Google OAuth session active.</span></p>
+              </div>
+              <div class="flex gap-3 items-center">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                <p class="body-main text-slate-300">Threat Sentinel: <span class="metadata-text text-slate-500">Continuous broker data protection online.</span></p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Row 2: Accounts footprint graveyard list -->
+      <div class="space-y-4">
+        <div class="flex justify-between items-center border-b border-white/5 pb-2.5">
+          <h3 class="metadata-text text-slate-500 uppercase tracking-widest">AUDITED PLATFORM REGISTRY</h3>
+          <span class="metadata-text text-slate-500 tracking-wider">INDEX: GMAIL_MAPPED_0X7A</span>
+        </div>
+
+        <!-- Skeleton loaders displayed by default during page initial load -->
+        <div id="skeleton-loader" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          <!-- Skeleton Card 1 -->
+          <div class="glass-panel flex flex-col gap-4 animate-pulse" style="padding: 24px;">
+            <div class="flex justify-between items-start">
+              <div class="flex gap-3.5">
+                <div class="w-11 h-11 bg-white/5 rounded-xl shimmer"></div>
+                <div class="space-y-2">
+                  <div class="h-4 bg-white/5 rounded w-24 shimmer"></div>
+                  <div class="h-3 bg-white/5 rounded w-16 shimmer"></div>
+                </div>
+              </div>
+              <div class="h-4 bg-white/5 rounded w-12 shimmer"></div>
+            </div>
+            <div class="space-y-2.5 pt-3.5 border-t border-white/5">
+              <div class="h-3.5 bg-white/5 rounded w-full shimmer"></div>
+              <div class="h-3.5 bg-white/5 rounded w-2/3 shimmer"></div>
+            </div>
+          </div>
+
+          <!-- Skeleton Card 2 -->
+          <div class="glass-panel flex flex-col gap-4 animate-pulse" style="padding: 24px;">
+            <div class="flex justify-between items-start">
+              <div class="flex gap-3.5">
+                <div class="w-11 h-11 bg-white/5 rounded-xl shimmer"></div>
+                <div class="space-y-2">
+                  <div class="h-4 bg-white/5 rounded w-24 shimmer"></div>
+                  <div class="h-3 bg-white/5 rounded w-16 shimmer"></div>
+                </div>
+              </div>
+              <div class="h-4 bg-white/5 rounded w-12 shimmer"></div>
+            </div>
+            <div class="space-y-2.5 pt-3.5 border-t border-white/5">
+              <div class="h-3.5 bg-white/5 rounded w-full shimmer"></div>
+              <div class="h-3.5 bg-white/5 rounded w-2/3 shimmer"></div>
+            </div>
+          </div>
+
+          <!-- Skeleton Card 3 -->
+          <div class="glass-panel flex flex-col gap-4 animate-pulse" style="padding: 24px;">
+            <div class="flex justify-between items-start">
+              <div class="flex gap-3.5">
+                <div class="w-11 h-11 bg-white/5 rounded-xl shimmer"></div>
+                <div class="space-y-2">
+                  <div class="h-4 bg-white/5 rounded w-24 shimmer"></div>
+                  <div class="h-3 bg-white/5 rounded w-16 shimmer"></div>
+                </div>
+              </div>
+              <div class="h-4 bg-white/5 rounded w-12 shimmer"></div>
+            </div>
+            <div class="space-y-2.5 pt-3.5 border-t border-white/5">
+              <div class="h-3.5 bg-white/5 rounded w-full shimmer"></div>
+              <div class="h-3.5 bg-white/5 rounded w-2/3 shimmer"></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="graveyard-container" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          <!-- Populated Dynamically by dashboard.js once resolved -->
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ==========================================
+       MOBILE RESPONSIVE NAVIGATION BAR
+       ========================================== -->
+  <nav class="mobile-nav-bar">
+    <a href="index.html" class="mobile-nav-item active">
+      <span class="material-symbols-outlined">dashboard</span>
+      Dashboard
+    </a>
+    <a href="atlas.html" class="mobile-nav-item">
+      <span class="material-symbols-outlined">map</span>
+      Atlas
+    </a>
+    <a href="shield.html" class="mobile-nav-item">
+      <span class="material-symbols-outlined">shield</span>
+      Shield
+    </a>
+    <a href="intelligence.html" class="mobile-nav-item">
+      <span class="material-symbols-outlined">insights</span>
+      Intel
+    </a>
+    <a href="deletion.html" class="mobile-nav-item">
+      <span class="material-symbols-outlined">delete_forever</span>
+      Deletion
+    </a>
+    <a href="alerts.html" class="mobile-nav-item">
+      <span class="material-symbols-outlined">notifications_active</span>
+      Alerts
+    </a>
+  </nav>
+
+  <!-- Dynamic Javascript Controller -->
+  <script src="dashboard.js" defer></script>
+</body>
+</html>

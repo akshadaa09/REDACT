@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>REDACT // Privacy Deactivation Engine</title>
+  
+  <!-- Modern Premium Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1" rel="stylesheet" />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+      background: radial-gradient(circle at 50% 0%, #0F172A 0%, #080B14 100%);
+      color: #F8FAFC;
+    }
+    
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Soft premium glowing graphics */
+    .glow-blur {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(196, 181, 253, 0.08) 0%, transparent 70%);
+      pointer-events: none;
+      filter: blur(40px);
+    }
+    
+    .glass-card {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+    }
+
+    /* High-fidelity layout buttons */
+    .btn-premium {
+      background: linear-gradient(135deg, #C4B5FD 0%, #A78BFA 100%);
+      box-shadow: 0 4px 20px rgba(196, 181, 253, 0.25);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .btn-premium:hover:not(:disabled) {
+      transform: translateY(-1.5px);
+      box-shadow: 0 6px 25px rgba(196, 181, 253, 0.4);
+      filter: brightness(1.05);
+    }
+
+    .btn-premium:active:not(:disabled) {
+      transform: translateY(0.5px);
+    }
+
+    /* Smooth animated progress bars */
+    .progress-bar {
+      height: 4px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #C4B5FD 0%, #A78BFA 100%);
+      width: 0%;
+      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Absolute opacity input trick: visible for Playwright script fills, invisible to user */
+    .invisible-automation-input {
+      position: absolute;
+      top: -100px;
+      left: -100px;
+      width: 10px;
+      height: 10px;
+      opacity: 0.01;
+      pointer-events: none;
+      z-index: -1;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen flex items-center justify-center p-6 relative overflow-hidden">
+  <!-- Glowing Ambient Graphics -->
+  <div class="glow-blur w-[450px] h-[450px] -top-24 -left-24"></div>
+  <div class="glow-blur w-[400px] h-[400px] -bottom-24 -right-24"></div>
+
+  <!-- Primary Wrapper Panel -->
+  <div class="relative w-full max-w-lg p-8 rounded-3xl glass-card space-y-7 z-10">
+    
+    <!-- Top Session Header -->
+    <div class="flex justify-between items-center border-b border-white/5 pb-4.5">
+      <div class="flex items-center gap-2">
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#C4B5FD] opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-[#C4B5FD]"></span>
+        </span>
+        <span class="text-[10px] font-mono uppercase tracking-widest text-[#C4B5FD] font-bold">REDACT CORE</span>
+      </div>
+      
+      <div class="flex items-center gap-4 text-[10px] font-mono text-slate-500">
+        <span class="flex items-center gap-1.5">
+          <span class="w-1 h-1 rounded-full bg-emerald-400"></span>
+          LIVE SESSION
+        </span>
+        <span id="session-timestamp">09:49:24 GMT</span>
+      </div>
+    </div>
+
+    <!-- Active Deactivation Engine Workspace -->
+    <div id="main-container" class="space-y-6">
+      
+      <!-- Headline descriptions -->
+      <div class="space-y-2">
+        <h1 class="text-2xl font-bold text-slate-100 tracking-tight">Privacy Deactivation Engine</h1>
+        <p class="text-xs text-slate-400 leading-relaxed">
+          Your privacy removal request is being securely processed across connected platforms.
+        </p>
+      </div>
+
+      <!-- Playwright input values (kept technically interactable for automation script fills) -->
+      <input id="platform-name" readonly type="text" class="invisible-automation-input" value="Loading platform...">
+      <input id="otp-display" readonly type="text" class="invisible-automation-input" value="------">
+
+      <!-- Premium Platform Vector Information Card -->
+      <div class="glass-card p-5 rounded-2xl border border-white/5 space-y-4 bg-slate-950/20">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div id="platform-icon-container" class="w-10 h-10 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center overflow-hidden">
+              <span class="material-symbols-outlined text-[#C4B5FD] text-xl">hub</span>
+            </div>
+            <div>
+              <h2 id="platform-title-display" class="text-sm font-bold text-[#F8FAFC]">Initializing Node...</h2>
+              <span class="font-mono text-[9px] text-[#C4B5FD] uppercase tracking-wider">Target platform matches</span>
+            </div>
+          </div>
+          <span id="platform-risk-badge" class="px-2.5 py-0.5 border text-[9px] font-mono rounded-md tracking-wider text-[#C4B5FD] border-[#C4B5FD]/20 bg-[#C4B5FD]/5">-</span>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3.5 border-t border-white/5 pt-4 text-xs">
+          <div>
+            <span class="font-mono text-[9px] text-slate-500 block uppercase tracking-wider">Connected Since</span>
+            <p id="platform-since-display" class="text-slate-300 font-semibold mt-1">-</p>
+          </div>
+          <div>
+            <span class="font-mono text-[9px] text-slate-500 block uppercase tracking-wider">Last Active</span>
+            <p id="platform-active-display" class="text-slate-300 font-semibold mt-1">-</p>
+          </div>
+          <div>
+            <span class="font-mono text-[9px] text-slate-500 block uppercase tracking-wider">Risk Level</span>
+            <p id="platform-risk-display" class="text-slate-300 font-semibold mt-1">-</p>
+          </div>
+          <div>
+            <span class="font-mono text-[9px] text-slate-500 block uppercase tracking-wider">Connection Mode</span>
+            <p id="platform-method-display" class="text-slate-300 font-semibold mt-1">-</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- OTP inputs dynamic lavender display -->
+      <div class="space-y-3.5">
+        <span class="font-mono text-[9px] text-slate-500 block uppercase tracking-widest text-center">Secure Verification Code</span>
+        <div class="flex gap-2.5 justify-center">
+          <div class="otp-digit-card w-11 h-13 border border-white/8 rounded-xl flex items-center justify-center font-mono text-base text-slate-400 bg-white/2 transition-all duration-300">-</div>
+          <div class="otp-digit-card w-11 h-13 border border-white/8 rounded-xl flex items-center justify-center font-mono text-base text-slate-400 bg-white/2 transition-all duration-300">-</div>
+          <div class="otp-digit-card w-11 h-13 border border-white/8 rounded-xl flex items-center justify-center font-mono text-base text-slate-400 bg-white/2 transition-all duration-300">-</div>
+          <div class="otp-digit-card w-11 h-13 border border-white/8 rounded-xl flex items-center justify-center font-mono text-base text-slate-400 bg-white/2 transition-all duration-300">-</div>
+          <div class="otp-digit-card w-11 h-13 border border-white/8 rounded-xl flex items-center justify-center font-mono text-base text-slate-400 bg-white/2 transition-all duration-300">-</div>
+          <div class="otp-digit-card w-11 h-13 border border-white/8 rounded-xl flex items-center justify-center font-mono text-base text-slate-400 bg-white/2 transition-all duration-300">-</div>
+        </div>
+      </div>
+
+      <!-- Authorize Purge Deletion button -->
+      <button id="confirm-deletion-btn" class="btn-premium w-full py-4 text-slate-950 font-bold text-xs uppercase tracking-widest rounded-xl shadow-lg">
+        Authorize Deletion
+      </button>
+
+    </div>
+
+    <!-- Active Deactivation Progress Loader -->
+    <div id="loading-container" class="hidden flex flex-col items-center justify-center py-8 space-y-6 text-center">
+      <!-- Pulsing rotating shield graphic -->
+      <div class="relative w-16 h-16 rounded-full bg-[#C4B5FD]/10 border border-[#C4B5FD]/30 flex items-center justify-center">
+        <span class="material-symbols-outlined text-[#C4B5FD] text-3xl animate-spin">shield</span>
+      </div>
+      
+      <div class="w-full space-y-3.5">
+        <div>
+          <h2 class="text-sm font-bold text-[#F8FAFC] tracking-wide">SECURE WORKFLOW ACTIVE</h2>
+          <p id="progress-status-text" class="font-mono text-[10px] text-[#C4B5FD] tracking-wider uppercase mt-1">Initializing protocols...</p>
+        </div>
+        <div class="progress-bar max-w-xs mx-auto">
+          <div id="progress-bar-fill" class="progress-fill"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Success Screen -->
+    <div id="success-container" class="hidden flex flex-col items-center justify-center text-center py-6 space-y-6">
+      <div class="w-16 h-16 rounded-full bg-[#A78BFA]/10 border border-[#A78BFA]/30 flex items-center justify-center">
+        <span class="material-symbols-outlined text-[#A78BFA] text-3xl animate-bounce">verified_user</span>
+      </div>
+      <div>
+        <h2 class="text-lg font-bold text-[#A78BFA] tracking-wide">Privacy Deactivation Complete</h2>
+        <p class="text-xs text-slate-400 mt-2.5 max-w-sm mx-auto leading-relaxed">
+          Your digital footprint has been successfully purged. Platform linkages have been permanently de-authorized.
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Dynamic Logic JavaScript -->
+  <script>
+    const platformInput = document.getElementById('platform-name');
+    const otpInput = document.getElementById('otp-display');
+    const confirmBtn = document.getElementById('confirm-deletion-btn');
+    
+    const mainContainer = document.getElementById('main-container');
+    const loadingContainer = document.getElementById('loading-container');
+    const successContainer = document.getElementById('success-container');
+    
+    const platformTitle = document.getElementById('platform-title-display');
+    const platformRiskBadge = document.getElementById('platform-risk-badge');
+    const platformSince = document.getElementById('platform-since-display');
+    const platformActive = document.getElementById('platform-active-display');
+    const platformRisk = document.getElementById('platform-risk-display');
+    const platformMethod = document.getElementById('platform-method-display');
+    const platformIcon = document.getElementById('platform-icon-container');
+
+    // 1. Live Dynamic Session Clock
+    function updateSessionClock() {
+      const clock = document.getElementById('session-timestamp');
+      if (clock) {
+        const now = new Date();
+        const hrs = String(now.getHours()).padStart(2, '0');
+        const mins = String(now.getMinutes()).padStart(2, '0');
+        const secs = String(now.getSeconds()).padStart(2, '0');
+        clock.innerText = `${hrs}:${mins}:${secs} GMT`;
+      }
+    }
+    setInterval(updateSessionClock, 1000);
+    updateSessionClock();
+
+    // 2. High-fidelity Platform Meta Database
+    const platformDB = {
+      instagram: {
+        name: 'Instagram',
+        since: '12 Jan 2023',
+        active: '4 days ago',
+        risk: 'Medium',
+        method: 'OAuth Gateway',
+        riskColor: 'text-amber-400 border-amber-400/20 bg-amber-400/5'
+      },
+      linkedin: {
+        name: 'LinkedIn',
+        since: '14 Feb 2020',
+        active: 'Today',
+        risk: 'Medium',
+        method: 'Gmail Auth Gateway',
+        riskColor: 'text-amber-400 border-amber-400/20 bg-amber-400/5'
+      },
+      swiggy: {
+        name: 'Swiggy',
+        since: '09 Mar 2022',
+        active: '2 days ago',
+        risk: 'Critical',
+        method: 'OTP SMS Node',
+        riskColor: 'text-rose-400 border-rose-400/20 bg-rose-400/5'
+      },
+      amazon: {
+        name: 'Amazon',
+        since: '05 Nov 2019',
+        active: 'Yesterday',
+        risk: 'High',
+        method: 'OAuth Gateway',
+        riskColor: 'text-rose-400 border-rose-400/20 bg-rose-400/5'
+      },
+      quora: {
+        name: 'Quora',
+        since: '18 Aug 2021',
+        active: '12 days ago',
+        risk: 'High',
+        method: 'OAuth Gateway',
+        riskColor: 'text-rose-400 border-rose-400/20 bg-rose-400/5'
+      }
+    };
+
+    function updatePlatformMetadata(platformName) {
+      const key = platformName.toLowerCase().trim();
+      const meta = platformDB[key] || {
+        name: platformName.charAt(0).toUpperCase() + platformName.slice(1),
+        since: '10 Jan 2023',
+        active: '4 days ago',
+        risk: 'High',
+        method: 'Secure SMTP Node',
+        riskColor: 'text-rose-400 border-rose-400/20 bg-rose-400/5'
+      };
+
+      platformTitle.innerText = meta.name;
+      platformSince.innerText = meta.since;
+      platformActive.innerText = meta.active;
+      platformRisk.innerText = meta.risk;
+      platformMethod.innerText = meta.method;
+      
+      // Update badge
+      platformRiskBadge.innerText = `${meta.risk.toUpperCase()} EXPOSURE`;
+      platformRiskBadge.className = `px-2.5 py-0.5 border text-[9px] font-mono rounded-md tracking-wider ${meta.riskColor}`;
+      
+      // Dynamic favicon resolution
+      const domain = getDomainName(meta.name);
+      platformIcon.innerHTML = `<img src="https://www.google.com/s2/favicons?sz=64&domain=${domain}" class="w-6 h-6 object-contain" onerror="this.outerHTML='<span class=\'material-symbols-outlined text-[#C4B5FD] text-xl\'>hub</span>'" />`;
+    }
+
+    function getDomainName(platform) {
+      const p = platform.toLowerCase();
+      if (p.includes('amazon')) return 'amazon.in';
+      if (p.includes('housing')) return 'housing.com';
+      return `${p}.com`;
+    }
+
+    // 3. Dynamic OTP Digit Distribution
+    function updateOTPCards(otpCode) {
+      const cards = document.querySelectorAll('.otp-digit-card');
+      const digits = otpCode.replace(/\s/g, ''); // strip gaps
+      
+      cards.forEach((card, idx) => {
+        if (digits[idx]) {
+          card.innerText = digits[idx];
+          card.className = 'otp-digit-card w-11 h-13 border border-[#C4B5FD]/40 rounded-xl flex items-center justify-center font-mono text-base text-[#C4B5FD] bg-[#C4B5FD]/10 shadow-[0_0_12px_rgba(196,181,253,0.15)] scale-105';
+        } else {
+          card.innerText = '-';
+          card.className = 'otp-digit-card w-11 h-13 border border-white/8 rounded-xl flex items-center justify-center font-mono text-base text-slate-400 bg-white/2';
+        }
+      });
+    }
+
+    // 4. Polling for programmatic automation inputs (Playwright fill support)
+    let lastPlatform = null;
+    let lastOTP = null;
+    setInterval(() => {
+      // Platform detection
+      const currentPlatform = platformInput.value;
+      if (currentPlatform && currentPlatform !== 'Loading platform...' && currentPlatform !== lastPlatform) {
+        lastPlatform = currentPlatform;
+        updatePlatformMetadata(currentPlatform);
+      }
+      
+      // OTP detection
+      const currentOTP = otpInput.value;
+      if (currentOTP && currentOTP !== '------' && currentOTP !== lastOTP) {
+        lastOTP = currentOTP;
+        updateOTPCards(currentOTP);
+      }
+    }, 100);
+
+    // 5. Deactivation Click & Elegant Progress Bar Steps
+    confirmBtn.addEventListener('click', () => {
+      confirmBtn.disabled = true;
+      
+      // Show loading overlay inside wrapper
+      mainContainer.classList.add('hidden');
+      loadingContainer.classList.remove('hidden');
+
+      const progressBar = document.getElementById('progress-bar-fill');
+      const statusLabel = document.getElementById('progress-status-text');
+      
+      const processMessages = [
+        'Encrypting deactivation request...',
+        'Verifying platform credentials...',
+        'Broadcasting secure removal sequence...',
+        'Removing linked identity tracks...'
+      ];
+
+      let step = 0;
+      const interval = setInterval(() => {
+        if (step < processMessages.length) {
+          statusLabel.innerText = processMessages[step];
+          progressBar.style.width = `${((step + 1) / processMessages.length) * 100}%`;
+          step++;
+        } else {
+          clearInterval(interval);
+          
+          // Switch to complete
+          loadingContainer.classList.add('hidden');
+          successContainer.classList.remove('hidden');
+        }
+      }, 500); // 500ms intervals (total 2 seconds)
+    });
+  </script>
+</body>
+</html>

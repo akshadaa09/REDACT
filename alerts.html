@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>REDACT // Real-Time Threat Alerts</title>
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  
+  <!-- Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1" rel="stylesheet" />
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body class="bg-[#0B1020] text-[#F8FAFC]">
+  
+  <!-- Glowing Background Overlays -->
+  <div class="glow-shape w-[500px] h-[500px] top-12 left-10"></div>
+  <div class="glow-shape w-[400px] h-[400px] bottom-10 right-20"></div>
+
+  <!-- ==========================================
+       LEFT SIDEBAR NAVIGATION
+       ========================================== -->
+  <aside class="sidebar-wrapper">
+    <div class="space-y-8">
+      <!-- Brand Logo Header -->
+      <div class="flex items-center gap-2.5 px-2">
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#C4B5FD] opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-[#C4B5FD]"></span>
+        </span>
+        <div class="flex flex-col">
+          <span class="font-sans font-bold text-sm tracking-widest text-[#F8FAFC]">REDACT</span>
+          <span class="font-mono text-[8px] text-slate-500 uppercase tracking-widest mt-0.5">AI Privacy Intelligence</span>
+        </div>
+      </div>
+
+      <!-- Navigation links -->
+      <nav class="space-y-1.5 flex flex-col">
+        <a href="index.html" class="sidebar-nav-item">
+          <span class="material-symbols-outlined text-lg">dashboard</span>
+          Dashboard
+        </a>
+        <a href="atlas.html" class="sidebar-nav-item">
+          <span class="material-symbols-outlined text-lg">map</span>
+          Privacy Risk Atlas
+        </a>
+        <a href="shield.html" class="sidebar-nav-item">
+          <span class="material-symbols-outlined text-lg">shield</span>
+          REDACT Shield
+        </a>
+        <a href="intelligence.html" class="sidebar-nav-item">
+          <span class="material-symbols-outlined text-lg">insights</span>
+          Threat Intelligence
+        </a>
+        <a href="deletion.html" class="sidebar-nav-item">
+          <span class="material-symbols-outlined text-lg">delete_forever</span>
+          Deletion Center
+        </a>
+        <a href="alerts.html" class="sidebar-nav-item active">
+          <span class="material-symbols-outlined text-lg">notifications_active</span>
+          Alert Center
+        </a>
+      </nav>
+    </div>
+
+    <!-- Active Profile Widget -->
+    <div class="border-t border-white/5 pt-4 flex flex-col gap-3">
+      <div class="flex items-center gap-2.5 px-2">
+        <img class="user-avatar-display w-8 h-8 rounded-full border border-white/10" src="https://ui-avatars.com/api/?name=User&background=0F172A&color=C4B5FD" alt="User Avatar" />
+        <div class="flex flex-col text-left leading-tight truncate max-w-[150px]">
+          <span class="user-name-display text-xs font-semibold text-slate-200 truncate">Loading...</span>
+          <span class="user-email-display text-[9px] text-slate-500 font-mono truncate">secure@redact.ai</span>
+        </div>
+      </div>
+      <a href="/auth/logout" class="text-center py-2 bg-white/5 border border-white/5 hover:border-rose-500/30 hover:bg-rose-500/5 text-rose-400 font-sans font-bold text-xs rounded-xl transition-all duration-300">
+        Logout Session
+      </a>
+    </div>
+  </aside>
+
+  <!-- ==========================================
+       MAIN CONTENT PANEL
+       ========================================== -->
+  <main class="content-wrapper">
+    
+    <!-- Top Header Bar -->
+    <header class="flex justify-between items-center border-b border-white/5 pb-4 mb-8">
+      <div>
+        <h1 class="text-xl font-bold text-[#F8FAFC] tracking-tight">Real-Time Privacy Alerts</h1>
+        <p class="text-xs text-slate-500 mt-0.5">Continuous mailbox threat monitor scanning for active storage alerts, tracking vulnerabilities, and leaks.</p>
+      </div>
+      
+      <div class="flex items-center gap-4 text-xs font-mono text-slate-500">
+        <span id="session-timestamp">00:00:00 GMT</span>
+        <span class="flex items-center gap-1.5 bg-[#C4B5FD]/10 border border-[#C4B5FD]/20 px-3 py-1 rounded-lg text-[10px] font-bold text-[#C4B5FD] tracking-wider font-mono">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          SCANNER ACTIVE
+        </span>
+      </div>
+    </header>
+
+    <!-- Top Alert Metrics Summary Banner -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 select-none">
+      <div class="glass-panel p-5 bg-[#FB7185]/5 border-[#FB7185]/15 flex items-center justify-between">
+        <div>
+          <span class="metadata-text text-rose-400 uppercase tracking-wider block font-bold">Critical Vulnerabilities</span>
+          <h2 id="metric-critical" class="card-title text-slate-200 mt-2 font-mono text-2xl">0</h2>
+        </div>
+        <span class="material-symbols-outlined text-rose-400/20 text-3xl">gpp_bad</span>
+      </div>
+      <div class="glass-panel p-5 bg-orange-500/5 border-orange-500/15 flex items-center justify-between">
+        <div>
+          <span class="metadata-text text-orange-400 uppercase tracking-wider block font-bold">Warning Indicators</span>
+          <h2 id="metric-warning" class="card-title text-slate-200 mt-2 font-mono text-2xl">0</h2>
+        </div>
+        <span class="material-symbols-outlined text-orange-500/20 text-3xl">cloud_sync</span>
+      </div>
+      <div class="glass-panel p-5 bg-emerald-500/5 border-emerald-500/15 flex items-center justify-between">
+        <div>
+          <span class="metadata-text text-emerald-400 uppercase tracking-wider block font-bold">Threat Stream Monitor</span>
+          <h2 class="card-title text-slate-200 mt-2 font-mono text-2xl">Active</h2>
+        </div>
+        <span class="material-symbols-outlined text-emerald-500/20 text-3xl">verified_user</span>
+      </div>
+    </div>
+
+    <!-- Active Alerts Log Container -->
+    <div class="space-y-6">
+      <div class="flex justify-between items-center border-b border-white/5 pb-2.5">
+        <h3 class="metadata-text text-slate-500 uppercase tracking-widest">THREAT NOTIFICATION MATRIX</h3>
+        <button id="refresh-alerts-btn" class="flex items-center gap-1 text-[11px] font-mono text-[#C4B5FD] hover:underline uppercase tracking-wider">
+          <span class="material-symbols-outlined text-xs">sync</span> Refresh Feed
+        </button>
+      </div>
+
+      <!-- Skeleton Loaders -->
+      <div id="alerts-skeleton" class="space-y-4">
+        <div class="glass-panel p-6 bg-white/2 animate-pulse flex flex-col gap-3">
+          <div class="flex justify-between items-center">
+            <div class="h-4 bg-white/5 rounded w-1/4 shimmer"></div>
+            <div class="h-4 bg-white/5 rounded w-16 shimmer"></div>
+          </div>
+          <div class="h-3.5 bg-white/5 rounded w-3/4 shimmer"></div>
+        </div>
+        <div class="glass-panel p-6 bg-white/2 animate-pulse flex flex-col gap-3">
+          <div class="flex justify-between items-center">
+            <div class="h-4 bg-white/5 rounded w-1/4 shimmer"></div>
+            <div class="h-4 bg-white/5 rounded w-16 shimmer"></div>
+          </div>
+          <div class="h-3.5 bg-white/5 rounded w-3/4 shimmer"></div>
+        </div>
+      </div>
+
+      <!-- Real-Time Alerts Feed -->
+      <div id="alerts-feed-container" class="space-y-4 hidden">
+        <!-- Appended Dynamically via JS -->
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Mobile Responsive Navigation -->
+  <nav class="mobile-nav-bar">
+    <a href="index.html" class="mobile-nav-item">
+      <span class="material-symbols-outlined">dashboard</span>
+      Dashboard
+    </a>
+    <a href="atlas.html" class="mobile-nav-item">
+      <span class="material-symbols-outlined">map</span>
+      Atlas
+    </a>
+    <a href="shield.html" class="mobile-nav-item">
+      <span class="material-symbols-outlined">shield</span>
+      Shield
+    </a>
+    <a href="intelligence.html" class="mobile-nav-item">
+      <span class="material-symbols-outlined">insights</span>
+      Intel
+    </a>
+    <a href="deletion.html" class="mobile-nav-item">
+      <span class="material-symbols-outlined">delete_forever</span>
+      Deletion
+    </a>
+    <a href="alerts.html" class="mobile-nav-item active">
+      <span class="material-symbols-outlined">notifications_active</span>
+      Alerts
+    </a>
+  </nav>
+
+  <!-- Logic Script -->
+  <script>
+    // Helper: Robust fetch with timeout & console telemetry
+    async function fetchWithTimeout(resource, options = {}) {
+      const { timeout = 12000 } = options; 
+      const controller = new AbortController();
+      const id = setTimeout(() => controller.abort(), timeout);
+      
+      console.log(`[API Request] ${options.method || 'GET'} ${resource} - Dispatching`);
+      try {
+        const response = await fetch(resource, {
+          ...options,
+          signal: controller.signal
+        });
+        clearTimeout(id);
+        console.log(`[API Response] ${options.method || 'GET'} ${resource} - Status: ${response.status}`);
+        return response;
+      } catch (error) {
+        clearTimeout(id);
+        console.error(`[API Error] ${options.method || 'GET'} ${resource} - Failed:`, error.message || error);
+        throw error;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      validateSession();
+      initLiveSessionClock();
+      
+      const refreshBtn = document.getElementById('refresh-alerts-btn');
+      if (refreshBtn) {
+        refreshBtn.addEventListener('click', loadAlertsFeed);
+      }
+    });
+
+    async function validateSession() {
+      try {
+        const userRes = await fetchWithTimeout('/api/user', { credentials: 'include', timeout: 5000 });
+        if (!userRes.ok) {
+          window.location.href = '/';
+          return;
+        }
+        const data = await userRes.json();
+        
+        // Populate profile sidebar fields
+        document.querySelectorAll('.user-name-display').forEach(el => el.innerText = data.name || 'REDACT Operator');
+        document.querySelectorAll('.user-email-display').forEach(el => el.innerText = data.email || 'secure@redact.ai');
+        document.querySelectorAll('.user-avatar-display').forEach(el => {
+          el.src = data.picture || 'https://ui-avatars.com/api/?name=User&background=0F172A&color=C4B5FD';
+        });
+
+        // Load Alerts
+        await loadAlertsFeed();
+      } catch (err) {
+        console.error('Session validation failure:', err);
+        window.location.href = '/';
+      }
+    }
+
+    function initLiveSessionClock() {
+      const clock = document.getElementById('session-timestamp');
+      function tick() {
+        const now = new Date();
+        clock.innerText = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')} GMT`;
+      }
+      setInterval(tick, 1000);
+      tick();
+    }
+
+    async function loadAlertsFeed() {
+      const skeleton = document.getElementById('alerts-skeleton');
+      const feed = document.getElementById('alerts-feed-container');
+
+      if (skeleton) skeleton.classList.remove('hidden');
+      if (feed) feed.classList.add('hidden');
+
+      try {
+        const res = await fetchWithTimeout('/api/alerts', { credentials: 'include', timeout: 10000 });
+        if (res.ok) {
+          const alerts = await res.json();
+          renderAlerts(alerts);
+        } else {
+          throw new Error(`Server returned code: ${res.status}`);
+        }
+      } catch (err) {
+        console.error('Failed to load alerts:', err);
+        // Fallback UI
+        if (feed) {
+          feed.innerHTML = `
+            <div class="glass-panel p-12 text-center text-rose-400 border-rose-500/20 bg-rose-500/5">
+              <span class="material-symbols-outlined block text-3xl mb-2 text-rose-500">error</span>
+              <p class="body-main font-semibold">Failed to retrieve privacy alerts feed.</p>
+              <p class="metadata-text mt-1 text-slate-500">Ensure the backend is online and refresh active session.</p>
+            </div>
+          `;
+          feed.classList.remove('hidden');
+          if (skeleton) skeleton.classList.add('hidden');
+        }
+      }
+    }
+
+    function renderAlerts(alerts) {
+      const skeleton = document.getElementById('alerts-skeleton');
+      const feed = document.getElementById('alerts-feed-container');
+      const criticalMetric = document.getElementById('metric-critical');
+      const warningMetric = document.getElementById('metric-warning');
+
+      if (!feed) return;
+
+      feed.innerHTML = '';
+      
+      let criticalCount = 0;
+      let warningCount = 0;
+
+      alerts.forEach((alert, idx) => {
+        if (alert.severity === 'HIGH') criticalCount++;
+        if (alert.severity === 'MEDIUM') warningCount++;
+
+        const alertCard = document.createElement('div');
+        
+        // Define color states
+        let cardBorderColor = 'border-white/8';
+        let severityBadgeColor = 'text-slate-400 border-slate-500/20 bg-slate-500/5';
+        let iconColor = 'text-slate-400';
+
+        if (alert.severity === 'HIGH') {
+          cardBorderColor = 'border-rose-500/20 bg-rose-500/2';
+          severityBadgeColor = 'text-rose-400 border-rose-500/20 bg-rose-500/10';
+          iconColor = 'text-rose-400';
+        } else if (alert.severity === 'MEDIUM') {
+          cardBorderColor = 'border-orange-500/20 bg-orange-500/2';
+          severityBadgeColor = 'text-orange-400 border-orange-500/20 bg-orange-500/10';
+          iconColor = 'text-orange-400';
+        } else if (alert.severity === 'LOW') {
+          cardBorderColor = 'border-indigo-500/20 bg-indigo-500/2';
+          severityBadgeColor = 'text-[#C4B5FD] border-[#C4B5FD]/20 bg-[#C4B5FD]/10';
+          iconColor = 'text-[#C4B5FD]';
+        }
+
+        // Format Date
+        const alertDate = new Date(alert.timestamp).toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+
+        alertCard.className = `glass-panel p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 transition-all duration-300 border ${cardBorderColor}`;
+        alertCard.innerHTML = `
+          <div class="flex items-start gap-4 flex-1 min-w-0">
+            <div class="w-12 h-12 rounded-xl bg-slate-900/60 border border-white/5 flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined ${iconColor} text-2xl">${alert.icon || 'notifications'}</span>
+            </div>
+            <div class="space-y-1 min-w-0">
+              <div class="flex flex-wrap items-center gap-2.5">
+                <h4 class="card-title text-slate-100" style="font-size: 18px; font-weight: 700;">${alert.title}</h4>
+                <span class="px-2.5 py-0.5 text-[9px] font-mono font-bold uppercase rounded-md tracking-wider border ${severityBadgeColor}">${alert.severity}</span>
+              </div>
+              <p class="body-main text-slate-400 text-sm leading-relaxed">${alert.description}</p>
+              <div class="flex items-center gap-2 mt-1.5">
+                <span class="metadata-text text-[#C4B5FD] text-[11px] uppercase tracking-wider block font-bold">${alert.platform}</span>
+                <span class="text-slate-600 text-xs">•</span>
+                <span class="metadata-text text-slate-500 text-[11px] font-mono">${alertDate}</span>
+              </div>
+            </div>
+          </div>
+          <div class="flex gap-3 w-full md:w-auto self-stretch md:self-auto justify-end">
+            <a href="deletion.html?platform=${encodeURIComponent(alert.platform)}" class="btn-premium py-2 px-4 rounded-xl text-xs font-sans font-bold uppercase tracking-wider text-center shrink-0 w-full md:w-auto">
+              Purge Linkage
+            </a>
+          </div>
+        `;
+
+        alertCard.style.opacity = '0';
+        alertCard.style.transform = 'translateY(10px)';
+        alertCard.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+        feed.appendChild(alertCard);
+
+        // Fade in stagger
+        setTimeout(() => {
+          alertCard.style.opacity = '1';
+          alertCard.style.transform = 'translateY(0)';
+        }, idx * 75);
+      });
+
+      if (criticalMetric) criticalMetric.innerText = criticalCount;
+      if (warningMetric) warningMetric.innerText = warningCount;
+
+      if (skeleton) skeleton.classList.add('hidden');
+      if (feed) feed.classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>
