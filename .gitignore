@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# Environment files
+.env
+.env*.local
+
+# Chrome User Data / Browser Profile Cache
+chrome_user_data/
+
+# OS-specific files
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Playwright & Browsers Caches
+.playwright/
+.cache/

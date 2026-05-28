@@ -42,8 +42,8 @@ body {
   background: radial-gradient(circle at 50% 0%, #131a30 0%, var(--bg-primary) 100%);
   color: var(--text-primary);
   font-family: var(--font-sans);
-  font-size: 16px; /* Increased overall font size */
-  line-height: 1.6;
+  font-size: 17px; /* Increased overall font size for premium legibility */
+  line-height: 1.65;
   min-height: 100vh;
   overflow-x: hidden;
   position: relative;
@@ -112,7 +112,7 @@ body {
   padding: 0.75rem 1.25rem;
   color: var(--text-muted); /* Distinct inactive text */
   border-radius: 0.75rem;
-  font-size: 15px; 
+  font-size: 16px; /* Increased for premium readability */
   font-weight: 600; /* Crisp hierarchy weight */
   text-decoration: none;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
@@ -167,7 +167,7 @@ body {
 
 /* Headings scale matching Apple & Linear */
 .hero-title {
-  font-size: 38px; /* Refined hero title sizing */
+  font-size: 42px; /* Increased hero title sizing for high-impact presence */
   font-weight: 800;
   line-height: 1.2;
   letter-spacing: -0.03em;
@@ -175,7 +175,7 @@ body {
 }
 
 .card-title {
-  font-size: 19px; /* Crisp card title sizing */
+  font-size: 22px; /* Increased card title sizing for clear boundaries */
   font-weight: 700;
   line-height: 1.35;
   letter-spacing: -0.02em;
@@ -183,17 +183,17 @@ body {
 }
 
 .body-main {
-  font-size: 15px; /* Clean standard readability size */
+  font-size: 16px; /* Clean standard readability size */
   font-weight: 500; /* Increased weight for clearer dark-mode visibility */
-  line-height: 1.6;
+  line-height: 1.65; /* Adjusted for better reading flow */
   color: var(--text-secondary);
 }
 
 .metadata-text {
-  font-size: 12px; /* Concise metadata tag text */
+  font-size: 13px; /* Increased concise metadata tag text */
   font-weight: 600; /* Distinct weight for clear data tags */
   font-family: var(--font-mono);
-  letter-spacing: 0.03em;
+  letter-spacing: 0.04em; /* Pronounced tracking */
   color: var(--text-muted);
 }
 
@@ -201,8 +201,8 @@ body {
 .btn-premium {
   background: linear-gradient(135deg, var(--lavender) 0%, var(--accent) 100%);
   color: #080B14;
-  font-weight: 600;
-  font-size: 16px; /* Increased button text size */
+  font-weight: 700; /* Bold for clearer action visibility */
+  font-size: 17px; /* Increased button text size */
   padding: 1.125rem 2rem; /* Larger premium button size */
   border-radius: 0.875rem;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
@@ -394,8 +394,8 @@ body {
   max-width: 75%;
   padding: 1.125rem 1.375rem;
   border-radius: 1.25rem;
-  font-size: 15px; /* Matches main body text */
-  line-height: 1.6;
+  font-size: 16px; /* Increased to match main body text */
+  line-height: 1.65;
 }
 
 .chat-bubble.user {
@@ -434,9 +434,9 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 2px;
-  font-size: 9px;
+  font-size: 11px; /* Increased to be highly legible on small screens */
   text-decoration: none;
-  font-weight: 500;
+  font-weight: 600; /* Increased weight for mobile scanning */
 }
 
 .mobile-nav-item.active {
@@ -458,3 +458,172 @@ body {
     padding: 2rem 1.5rem;
   }
 }
+
+/* ==========================================
+     GLOBAL SMOOTH THEME TRANSITIONS
+     ========================================== */
+body, aside, main, header, nav, .glass-panel, a, button, span, h1, h2, h3, h4, p, svg, circle, img, input {
+  transition: background 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* ==========================================
+     LIGHT MODE VARIANT (LAVENDER THEMED)
+     ========================================== */
+.light-mode {
+  --bg-primary: #F3F0FF; /* Soft pastel lavender white background */
+  --bg-secondary: #EBE5FF; /* Soft lavender slate */
+  --card-bg: rgba(255, 255, 255, 0.95); /* Solid white glass for maximum card readability */
+  --border-color: rgba(109, 40, 217, 0.16); /* More defined pastel purple border */
+  
+  --lavender-light: #3B0764; /* Deeper purple for high contrast headers */
+  --lavender: #6D28D9; /* Vibrant purple */
+  --accent: #7C3AED; /* Accent violet */
+  
+  --text-primary: #0F092A; /* Deep indigo-black for clear text */
+  --text-secondary: #1E1B4B; /* Dark indigo for highly readable description texts */
+  --text-muted: #475569; /* Slate 600 for clear subtexts */
+  
+  --danger: #DC2626; /* Solid red */
+  --success: #059669; /* Solid green */
+}
+
+.light-mode body {
+  background: radial-gradient(circle at 50% 0%, #FAF5FF 0%, #E2DDFF 100%);
+}
+
+.light-mode .sidebar-wrapper {
+  background: #FDFBFF;
+  border-right-color: rgba(109, 40, 217, 0.15);
+}
+
+.light-mode .sidebar-nav-item.active {
+  background: rgba(109, 40, 217, 0.08);
+  color: #6D28D9;
+  border-color: rgba(109, 40, 217, 0.2);
+}
+
+.light-mode .mobile-nav-bar {
+  background: #FDFBFF;
+  border-top-color: rgba(109, 40, 217, 0.15);
+}
+
+.light-mode .glass-panel {
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+}
+
+.light-mode .glass-panel:hover {
+  border-color: rgba(109, 40, 217, 0.35);
+  box-shadow: 0 20px 45px rgba(15, 23, 42, 0.1);
+}
+
+.light-mode .gauge-bg {
+  stroke: rgba(109, 40, 217, 0.08);
+}
+
+.light-mode .shimmer {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.4) 25%, rgba(109, 40, 217, 0.06) 50%, rgba(255, 255, 255, 0.4) 75%);
+  background-size: 200% 100%;
+}
+
+.light-mode .grid-overlay {
+  background-image: radial-gradient(rgba(109, 40, 217, 0.06) 1px, transparent 0);
+}
+
+.light-mode input {
+  background-color: #FFFFFF;
+  color: #0F092A !important;
+  border-color: rgba(109, 40, 217, 0.2);
+}
+
+.light-mode .chat-bubble.ai {
+  background: #FFFFFF;
+  box-shadow: 0 4px 15px rgba(15, 23, 42, 0.03);
+}
+
+.light-mode .chat-bubble.user {
+  background: rgba(109, 40, 217, 0.08);
+  color: #1E1B4B;
+}
+
+/* ==========================================
+     LIGHT MODE CONTRAST OVERRIDES
+     ========================================== */
+.light-mode .text-lavender {
+  color: #6D28D9 !important;
+}
+
+.light-mode .text-[#C4B5FD] {
+  color: #6D28D9 !important;
+}
+
+.light-mode .text-rose-400 {
+  color: #E11D48 !important;
+}
+
+.light-mode .text-rose-500 {
+  color: #BE123C !important;
+}
+
+.light-mode .text-emerald-400 {
+  color: #047857 !important;
+}
+
+.light-mode .text-emerald {
+  color: #047857 !important;
+}
+
+.light-mode .text-amber-400 {
+  color: #B45309 !important;
+}
+
+/* Override all common text-slate colors dynamically to ensure excellent text contrast */
+.light-mode .text-slate-100,
+.light-mode .text-slate-200 {
+  color: #0F092A !important;
+}
+
+.light-mode .text-slate-300,
+.light-mode .text-slate-400 {
+  color: #1E1B4B !important;
+}
+
+.light-mode .text-slate-500 {
+  color: #475569 !important;
+}
+
+.light-mode .text-slate-600 {
+  color: #334155 !important;
+}
+
+/* Adjust dark background blocks to light glass elements */
+.light-mode .bg-slate-900\/60 {
+  background-color: rgba(109, 40, 217, 0.05) !important;
+}
+
+/* Dynamic background opacity overrides */
+.light-mode .bg-emerald-500\/10 {
+  background-color: rgba(5, 150, 105, 0.1) !important;
+}
+
+.light-mode .border-emerald-500\/20 {
+  border-color: rgba(5, 150, 105, 0.25) !important;
+}
+
+.light-mode .bg-amber-500\/10 {
+  background-color: rgba(217, 119, 6, 0.1) !important;
+}
+
+.light-mode .border-amber-500\/20 {
+  border-color: rgba(217, 119, 6, 0.25) !important;
+}
+
+/* Transform dark dividers and borders into defined light lavender lines */
+.light-mode .border-white\/5,
+.light-mode .border-white\/10 {
+  border-color: rgba(109, 40, 217, 0.12) !important;
+}
+
+.light-mode .bg-white\/5 {
+  background-color: rgba(109, 40, 217, 0.05) !important;
+}
+

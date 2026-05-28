@@ -16,6 +16,19 @@
   
   <!-- Premium Custom Styling Sheet -->
   <link rel="stylesheet" href="styles.css" />
+  <!-- Theme Init (avoids flash) -->
+  <script>
+    (function() {
+      const theme = localStorage.getItem('theme') || 'dark';
+      if (theme === 'light') {
+        document.documentElement.classList.remove('dark');
+        document.documentElement.classList.add('light-mode');
+      } else {
+        document.documentElement.classList.add('dark');
+        document.documentElement.classList.remove('light-mode');
+      }
+    })();
+  </script>
 </head>
 
 <body class="bg-[#07111F] text-[#F5F7FA] font-sans overflow-x-hidden min-h-screen pb-24 md:pb-8">
@@ -29,7 +42,7 @@
   <header class="sticky top-0 z-40 bg-[#07111F]/70 backdrop-blur-md border-b border-white/5 flex justify-between items-center w-full px-6 py-3.5 max-w-7xl mx-auto">
     <div class="flex items-center gap-3">
       <span class="material-symbols-outlined text-emerald text-2xl">shield</span>
-      <span class="font-mono font-bold text-lg tracking-widest text-[#F5F7FA] select-none">REDACT</span>
+      <span class="font-mono font-bold text-lg tracking-widest  select-none">REDACT</span>
       
       <!-- System Status Active Badge -->
       <div class="hidden sm:flex items-center gap-2 px-2.5 py-1 bg-emerald/10 rounded-full border border-emerald/20 ml-2">
@@ -367,7 +380,13 @@
       <span class="font-mono text-[9px] uppercase tracking-wider mt-1 select-none">Real-Time Alerts</span>
     </a>
 
-  </nav>
+          
+        <!-- Theme Toggle Button -->
+        <button id="theme-toggle-btn" class="sidebar-nav-item w-full text-left mt-4 flex items-center gap-4" style="background: transparent; border: none; cursor: pointer;">
+          <span class="material-symbols-outlined text-lg" id="theme-toggle-icon">light_mode</span>
+          <span id="theme-toggle-text">Light Mode</span>
+        </button>
+      </nav>
 
   <!-- Google Gemini sentinel mini button (switches directly to Sentinel tab) -->
   <button id="open-ai-btn" class="fixed bottom-24 right-6 z-40 w-12 h-12 rounded-full bg-emerald shadow-[0_0_20px_rgba(0,255,178,0.3)] hover:shadow-[0_0_30px_rgba(0,255,178,0.55)] flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300">
@@ -376,5 +395,7 @@
 
   <!-- Modular Frontend Core Engine -->
   <script src="app.js" defer></script>
+  <!-- Dynamic Theme Controller -->
+  <script src="theme.js" defer></script>
 </body>
 </html>

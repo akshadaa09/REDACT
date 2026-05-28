@@ -16,6 +16,19 @@
   
   <!-- Styles -->
   <link rel="stylesheet" href="styles.css" />
+  <!-- Theme Init (avoids flash) -->
+  <script>
+    (function() {
+      const theme = localStorage.getItem('theme') || 'dark';
+      if (theme === 'light') {
+        document.documentElement.classList.remove('dark');
+        document.documentElement.classList.add('light-mode');
+      } else {
+        document.documentElement.classList.add('dark');
+        document.documentElement.classList.remove('light-mode');
+      }
+    })();
+  </script>
 </head>
 
 <body class="bg-[#0B1020] text-[#F8FAFC]">
@@ -36,7 +49,7 @@
           <span class="relative inline-flex rounded-full h-2 w-2 bg-[#C4B5FD]"></span>
         </span>
         <div class="flex flex-col">
-          <span class="font-sans font-bold text-sm tracking-widest text-[#F8FAFC]">REDACT</span>
+          <span class="font-sans font-bold text-sm tracking-widest ">REDACT</span>
           <span class="font-mono text-[8px] text-slate-500 uppercase tracking-widest mt-0.5">AI Privacy Intelligence</span>
         </div>
       </div>
@@ -67,6 +80,16 @@
           <span class="material-symbols-outlined text-lg">notifications_active</span>
           Alert Center
         </a>
+        <a href="cleanup.html" class="sidebar-nav-item">
+          <span class="material-symbols-outlined text-lg">cleaning_services</span>
+          One Click Cleanup
+        </a>
+              
+        <!-- Theme Toggle Button -->
+        <button id="theme-toggle-btn" class="sidebar-nav-item w-full text-left mt-4 flex items-center gap-4" style="background: transparent; border: none; cursor: pointer;">
+          <span class="material-symbols-outlined text-lg" id="theme-toggle-icon">light_mode</span>
+          <span id="theme-toggle-text">Light Mode</span>
+        </button>
       </nav>
     </div>
 
@@ -99,6 +122,10 @@
       
       <div class="flex items-center gap-4 text-xs font-mono text-slate-500">
         <span id="session-timestamp">00:00:00 GMT</span>
+                <!-- Mobile/Tablet Theme Toggle Button -->
+        <button id="mobile-theme-toggle-btn" class="flex items-center justify-center p-1.5 rounded-lg border border-[#C4B5FD]/25 hover:bg-white/5 transition-all text-[#C4B5FD] shrink-0" title="Toggle Theme" style="background: transparent; cursor: pointer;">
+          <span class="material-symbols-outlined text-[18px]" id="mobile-theme-toggle-icon">light_mode</span>
+        </button>
         <span class="flex items-center gap-1.5 bg-[#C4B5FD]/10 border border-[#C4B5FD]/20 px-3 py-1 rounded-lg text-[10px] font-bold text-[#C4B5FD] tracking-wider font-mono">
           <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
           SCANNER ACTIVE
@@ -191,6 +218,10 @@
     <a href="alerts.html" class="mobile-nav-item active">
       <span class="material-symbols-outlined">notifications_active</span>
       Alerts
+    </a>
+    <a href="cleanup.html" class="mobile-nav-item">
+      <span class="material-symbols-outlined">cleaning_services</span>
+      Cleanup
     </a>
   </nav>
 
@@ -348,14 +379,14 @@
             </div>
             <div class="space-y-1 min-w-0">
               <div class="flex flex-wrap items-center gap-2.5">
-                <h4 class="card-title text-slate-100" style="font-size: 18px; font-weight: 700;">${alert.title}</h4>
-                <span class="px-2.5 py-0.5 text-[9px] font-mono font-bold uppercase rounded-md tracking-wider border ${severityBadgeColor}">${alert.severity}</span>
+                <h4 class="card-title text-slate-100">${alert.title}</h4>
+                <span class="px-2.5 py-0.5 text-[11px] font-mono font-bold uppercase rounded-md tracking-wider border ${severityBadgeColor}">${alert.severity}</span>
               </div>
               <p class="body-main text-slate-400 text-sm leading-relaxed">${alert.description}</p>
               <div class="flex items-center gap-2 mt-1.5">
-                <span class="metadata-text text-[#C4B5FD] text-[11px] uppercase tracking-wider block font-bold">${alert.platform}</span>
+                <span class="metadata-text text-[#C4B5FD] text-[13px] uppercase tracking-wider block font-bold">${alert.platform}</span>
                 <span class="text-slate-600 text-xs">•</span>
-                <span class="metadata-text text-slate-500 text-[11px] font-mono">${alertDate}</span>
+                <span class="metadata-text text-slate-500 text-[13px] font-mono">${alertDate}</span>
               </div>
             </div>
           </div>
@@ -385,5 +416,7 @@
       if (feed) feed.classList.remove('hidden');
     }
   </script>
+  <!-- Dynamic Theme Controller -->
+  <script src="theme.js" defer></script>
 </body>
 </html>

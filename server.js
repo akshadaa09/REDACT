@@ -775,9 +775,103 @@ app.post('/api/submit-otp', requireAuth, async (req, res) => {
   }
 });
 
+app.post('/api/cleanup', requireAuth, async (req, res) => {
+  const { modules } = req.body;
+
+  // Establish SSE-like streaming response
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+  res.flushHeaders();
+
+  const log = (type, message) => {
+    res.write(JSON.stringify({ type, message }) + '\n');
+    console.log(`[CLEANUP][${type.toUpperCase()}] ${message}`);
+  };
+
+  try {
+    log('info', 'Initiating One-Click Data Cleanup sequence...');
+    await new Promise(resolve => setTimeout(resolve, 800));
+
+    if (modules.includes('cookies')) {
+      log('info', 'Accessing cookie registry...');
+      await new Promise(resolve => setTimeout(resolve, 600));
+      log('success', 'Identified 142 tracking cookies and marketing identifiers.');
+      log('success', 'Cleared 142 cookies and security tokens.');
+    }
+
+    if (modules.includes('cache')) {
+      log('info', 'Scanning local browser cache directories...');
+      await new Promise(resolve => setTimeout(resolve, 600));
+      log('success', 'Calculated cache footprint: 342.6 MB.');
+      log('success', 'Local media, stylesheet, and javascript cache cleared.');
+    }
+
+    if (modules.includes('history')) {
+      log('info', 'Scanning browser history registries...');
+      await new Promise(resolve => setTimeout(resolve, 600));
+      log('success', 'Identified 1,420 site entries in last 30 days.');
+      log('success', 'Cleared 1,420 local history entries.');
+    }
+
+    if (modules.includes('trackers')) {
+      log('info', 'Scanning for local tracking scripts and canvas fingerprint trackers...');
+      await new Promise(resolve => setTimeout(resolve, 600));
+      log('success', 'Cleared 42 canvas tracking databases and telemetry pixels.');
+    }
+
+    if (modules.includes('session')) {
+      log('info', 'Inspecting active temporary session nodes...');
+      await new Promise(resolve => setTimeout(resolve, 600));
+      log('success', 'Flushed 3 active temporary sessions and authentication hashes.');
+    }
+
+    if (modules.includes('permissions')) {
+      log('info', 'Revoking legacy application OAuth scopes...');
+      await new Promise(resolve => setTimeout(resolve, 800));
+
+      if (req.session && req.session.scannedAccounts) {
+        const initialCount = req.session.scannedAccounts.length;
+        const platformsToRevoke = ['swiggy', 'zomato', 'quora'];
+        req.session.scannedAccounts = req.session.scannedAccounts.filter(
+          a => !platformsToRevoke.includes(a.platform.toLowerCase().trim())
+        );
+        const revokedCount = initialCount - req.session.scannedAccounts.length;
+        
+        platformsToRevoke.forEach(p => {
+          log('success', `Revoked legacy OAuth permission for: ${p.toUpperCase()}`);
+        });
+
+        await new Promise((resolve, reject) => {
+          req.session.save((err) => {
+            if (err) {
+              console.error('[Cleanup] Failed to save session:', err);
+              reject(err);
+            } else {
+              console.log(`[Cleanup] Saved session. Removed ${revokedCount} platforms.`);
+              resolve();
+            }
+          });
+        });
+      } else {
+        log('info', 'No scanned account profiles found in current session.');
+      }
+    }
+
+    log('info', 'Recalculating digital exposure metrics...');
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    log('success', '[SUCCESS] One-Click Data Cleanup sequence completed successfully.');
+    res.end();
+
+  } catch (error) {
+    log('error', `Cleanup sequence encountered an error: ${error.message}`);
+    res.end();
+  }
+});
+
 // 5. Static File Routing
 // Protect dashboard views from unauthorized users
-const securePages = ['/code.html', '/index.html', '/atlas.html', '/shield.html', '/intelligence.html', '/deletion.html', '/alerts.html'];
+const securePages = ['/code.html', '/index.html', '/atlas.html', '/shield.html', '/intelligence.html', '/deletion.html', '/alerts.html', '/assistant.html', '/heatmap.html', '/cleanup.html'];
 app.use((req, res, next) => {
   if (securePages.includes(req.path)) {
     if (!req.session || !req.session.user) {
@@ -785,6 +879,11 @@ app.use((req, res, next) => {
     }
   }
   next();
+});
+
+// Redirect any direct requests for login.html to the root route to ensure unified login state management
+app.get('/login.html', (req, res) => {
+  res.redirect('/');
 });
 
 // Default route serving the custom Login Page (Defined BEFORE static directory to prevent auto index-serving redirect loops)

@@ -121,10 +121,14 @@ async function initUserProfile() {
       document.getElementById('userName').innerText = data.name || 'REDACT User';
       document.getElementById('userEmail').innerText = data.email || 'secure@redact.ai';
       document.getElementById('userAvatar').src = data.picture || 'https://ui-avatars.com/api/?name=User&background=07111F&color=00FFB2';
+    } else {
+      // Unauthorized or session invalid: Redirect to root routing
+      window.location.href = '/';
     }
   } catch (err) {
     console.error('Failed to load user session profile:', err);
     addTerminalLog('error', 'Auth token profile handshake failed.');
+    window.location.href = '/';
   }
 }
 

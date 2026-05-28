@@ -16,6 +16,19 @@
   
   <!-- Styles -->
   <link rel="stylesheet" href="styles.css" />
+  <!-- Theme Init (avoids flash) -->
+  <script>
+    (function() {
+      const theme = localStorage.getItem('theme') || 'dark';
+      if (theme === 'light') {
+        document.documentElement.classList.remove('dark');
+        document.documentElement.classList.add('light-mode');
+      } else {
+        document.documentElement.classList.add('dark');
+        document.documentElement.classList.remove('light-mode');
+      }
+    })();
+  </script>
 </head>
 
 <body class="bg-[#0B1020] text-[#F8FAFC]">
@@ -36,7 +49,7 @@
           <span class="relative inline-flex rounded-full h-2 w-2 bg-[#C4B5FD]"></span>
         </span>
         <div class="flex flex-col">
-          <span class="font-sans font-bold text-sm tracking-widest text-[#F8FAFC]">REDACT</span>
+          <span class="font-sans font-bold text-sm tracking-widest ">REDACT</span>
           <span class="font-mono text-[8px] text-slate-500 uppercase tracking-widest mt-0.5">AI Privacy Intelligence</span>
         </div>
       </div>
@@ -67,6 +80,16 @@
           <span class="material-symbols-outlined text-lg">notifications_active</span>
           Alert Center
         </a>
+        <a href="cleanup.html" class="sidebar-nav-item">
+          <span class="material-symbols-outlined text-lg">cleaning_services</span>
+          One Click Cleanup
+        </a>
+        
+        <!-- Theme Toggle Button -->
+        <button id="theme-toggle-btn" class="sidebar-nav-item w-full text-left mt-4 flex items-center gap-4" style="background: transparent; border: none; cursor: pointer;">
+          <span class="material-symbols-outlined text-lg" id="theme-toggle-icon">light_mode</span>
+          <span id="theme-toggle-text">Light Mode</span>
+        </button>
       </nav>
     </div>
 
@@ -99,6 +122,10 @@
       
       <div class="flex items-center gap-4 text-xs font-mono text-slate-500">
         <span id="session-timestamp">00:00:00 GMT</span>
+                <!-- Mobile/Tablet Theme Toggle Button -->
+        <button id="mobile-theme-toggle-btn" class="flex items-center justify-center p-1.5 rounded-lg border border-[#C4B5FD]/25 hover:bg-white/5 transition-all text-[#C4B5FD] shrink-0" title="Toggle Theme" style="background: transparent; cursor: pointer;">
+          <span class="material-symbols-outlined text-[18px]" id="mobile-theme-toggle-icon">light_mode</span>
+        </button>
         <span class="flex items-center gap-1 bg-[#C4B5FD]/10 border border-[#C4B5FD]/20 px-2 py-0.5 rounded text-[9px] font-bold text-[#C4B5FD]">
           SECURE PROTOCOLS
         </span>
@@ -248,6 +275,10 @@
       <span class="material-symbols-outlined">notifications_active</span>
       Alerts
     </a>
+    <a href="cleanup.html" class="mobile-nav-item">
+      <span class="material-symbols-outlined">cleaning_services</span>
+      Cleanup
+    </a>
   </nav>
 
   <!-- Deletion flow JS script -->
@@ -384,16 +415,45 @@
         data: ['Exposed Platform Cookies', 'Sign-up Headers']
       };
 
-      document.getElementById('target-title').innerText = preset.name;
-      document.getElementById('target-since').innerText = preset.date;
-      document.getElementById('target-active').innerText = preset.active;
-      
-      // Pull risk level from account report if it exists
       const match = rawAccounts.find(a => a.platform.toLowerCase() === key);
-      const risk = match ? match.risk : 'HIGH';
-      document.getElementById('target-risk').innerText = risk;
-      document.getElementById('target-method').innerText = preset.method;
-      document.getElementById('target-retained-data').innerText = preset.data.join(', ');
+
+      const displayName = match ? (preset.name || match.platform.charAt(0).toUpperCase() + match.platform.slice(1)) : preset.name;
+      const firstDetected = match ? (match.firstDetected || match.lastDetected || preset.date) : preset.date;
+      const lastActive = match ? (match.lastActive || preset.active) : preset.active;
+      const risk = match ? (match.risk || 'HIGH') : 'HIGH';
+      const method = match ? (match.source || preset.method || 'Gmail OAuth') : preset.method;
+      const retainedData = match ? (match.retainedData || preset.data) : preset.data;
+
+      document.getElementById('target-title').innerText = displayName;
+      document.getElementById('target-since').innerText = firstDetected;
+      document.getElementById('target-active').innerText = lastActive;
+      
+      const riskEl = document.getElementById('target-risk');
+      if (riskEl) {
+        riskEl.innerText = risk;
+        riskEl.className = 'font-semibold mt-1 ';
+        if (risk === 'CRITICAL') {
+          riskEl.className += 'text-rose-400';
+        } else if (risk === 'HIGH') {
+          riskEl.className += 'text-orange-400';
+        } else if (risk === 'MEDIUM') {
+          riskEl.className += 'text-indigo-400';
+        } else if (risk === 'LOW') {
+          riskEl.className += 'text-emerald-400';
+        } else {
+          riskEl.className += 'text-slate-300';
+        }
+      }
+
+      const methodEl = document.getElementById('target-method');
+      if (methodEl) {
+        methodEl.innerText = method;
+      }
+
+      const dataEl = document.getElementById('target-retained-data');
+      if (dataEl) {
+        dataEl.innerText = Array.isArray(retainedData) ? retainedData.join(', ') : retainedData;
+      }
 
       const domain = getPlatformDomain(plat);
       document.getElementById('target-icon-container').innerHTML = `<img src="https://www.google.com/s2/favicons?sz=64&domain=${domain}" class="w-6 h-6 object-contain" onerror="this.outerHTML='<span class=\'material-symbols-outlined text-[#C4B5FD]\'>hub</span>'" />`;
@@ -403,6 +463,15 @@
       const p = platform.toLowerCase().trim();
       if (p.includes('amazon')) return 'amazon.in';
       if (p.includes('housing')) return 'housing.com';
+      if (p.includes('quora')) return 'quora.com';
+      if (p.includes('reddit')) return 'reddit.com';
+      if (p.includes('linkedin')) return 'linkedin.com';
+      if (p.includes('swiggy')) return 'swiggy.in';
+      if (p.includes('zomato')) return 'zomato.com';
+      if (p.includes('netflix')) return 'netflix.com';
+      if (p.includes('instagram')) return 'instagram.com';
+      if (p.includes('spotify')) return 'spotify.com';
+      if (p.includes('github')) return 'github.com';
       return `${p}.com`;
     }
 
@@ -559,6 +628,7 @@
         const reader = purgeRes.body.getReader();
         const decoder = new TextDecoder();
         let partialChunk = '';
+        let isSuccess = false;
 
         while (true) {
           const { done, value } = await reader.read();
@@ -573,8 +643,14 @@
               try {
                 const logData = JSON.parse(line);
                 addLogLine(logData.type, logData.message);
+                if (logData.type === 'success') {
+                  isSuccess = true;
+                }
               } catch (e) {
                 addLogLine('info', line);
+                if (line.includes('[SUCCESS]') || line.includes('completed')) {
+                  isSuccess = true;
+                }
               }
             }
           }
@@ -584,8 +660,25 @@
           try {
             const logData = JSON.parse(partialChunk);
             addLogLine(logData.type, logData.message);
+            if (logData.type === 'success') {
+              isSuccess = true;
+            }
           } catch (e) {
             addLogLine('info', partialChunk);
+            if (partialChunk.includes('[SUCCESS]') || partialChunk.includes('completed')) {
+              isSuccess = true;
+            }
+          }
+        }
+
+        if (isSuccess) {
+          try {
+            const bc = new BroadcastChannel('privacy-updates');
+            bc.postMessage({ type: 'purge', platform: selectedPlatform });
+            bc.close();
+            console.log('[BroadcastChannel] Sent purge message for:', selectedPlatform);
+          } catch (bcErr) {
+            console.error('[BroadcastChannel] Failed to send broadcast message:', bcErr);
           }
         }
 
@@ -632,5 +725,7 @@
       container.scrollTop = container.scrollHeight;
     }
   </script>
+  <!-- Dynamic Theme Controller -->
+  <script src="theme.js" defer></script>
 </body>
 </html>

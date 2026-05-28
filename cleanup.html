@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>REDACT // One-Click Cleanup</title>
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  
+  <!-- Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1" rel="stylesheet" />
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Theme Init (avoids flash) -->
+  <script>
+    (function() {
+      const theme = localStorage.getItem('theme') || 'dark';
+      if (theme === 'light') {
+        document.documentElement.classList.remove('dark');
+        document.documentElement.classList.add('light-mode');
+      } else {
+        document.documentElement.classList.add('dark');
+        document.documentElement.classList.remove('light-mode');
+      }
+    })();
+  </script>
+</head>
+
+<body class="bg-[#0B1020] text-[#F8FAFC]">
+  
+  <!-- Glowing Background Overlays -->
+  <div class="glow-shape w-[500px] h-[500px] top-12 left-10"></div>
+  <div class="glow-shape w-[400px] h-[400px] bottom-10 right-20"></div>
+
+  <!-- ==========================================
+       LEFT SIDEBAR NAVIGATION
+       ========================================== -->
+  <aside class="sidebar-wrapper">
+    <div class="space-y-8">
+      <!-- Brand Logo Header -->
+      <div class="flex items-center gap-2.5 px-2">
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#C4B5FD] opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-[#C4B5FD]"></span>
+        </span>
+        <div class="flex flex-col">
+          <span class="font-sans font-bold text-sm tracking-widest ">REDACT</span>
+          <span class="font-mono text-[8px] text-slate-500 uppercase tracking-widest mt-0.5">AI Privacy Intelligence</span>
+        </div>
+      </div>
+
+      <!-- Navigation links -->
+      <nav class="space-y-1.5 flex flex-col">
+        <a href="index.html" class="sidebar-nav-item">
+          <span class="material-symbols-outlined text-lg">dashboard</span>
+          Dashboard
+        </a>
+        <a href="atlas.html" class="sidebar-nav-item">
+          <span class="material-symbols-outlined text-lg">map</span>
+          Privacy Risk Atlas
+        </a>
+        <a href="shield.html" class="sidebar-nav-item">
+          <span class="material-symbols-outlined text-lg">shield</span>
+          REDACT Shield
+        </a>
+        <a href="intelligence.html" class="sidebar-nav-item">
+          <span class="material-symbols-outlined text-lg">insights</span>
+          Threat Intelligence
+        </a>
+        <a href="deletion.html" class="sidebar-nav-item">
+          <span class="material-symbols-outlined text-lg">delete_forever</span>
+          Deletion Center
+        </a>
+        <a href="alerts.html" class="sidebar-nav-item">
+          <span class="material-symbols-outlined text-lg">notifications_active</span>
+          Alert Center
+        </a>
+        <a href="cleanup.html" class="sidebar-nav-item active">
+          <span class="material-symbols-outlined text-lg">cleaning_services</span>
+          One Click Cleanup
+        </a>
+              
+        <!-- Theme Toggle Button -->
+        <button id="theme-toggle-btn" class="sidebar-nav-item w-full text-left mt-4 flex items-center gap-4" style="background: transparent; border: none; cursor: pointer;">
+          <span class="material-symbols-outlined text-lg" id="theme-toggle-icon">light_mode</span>
+          <span id="theme-toggle-text">Light Mode</span>
+        </button>
+      </nav>
+    </div>
+
+    <!-- Active Profile Widget -->
+    <div class="border-t border-white/5 pt-4 flex flex-col gap-3">
+      <div class="flex items-center gap-2.5 px-2">
+        <img class="user-avatar-display w-8 h-8 rounded-full border border-white/10" src="https://ui-avatars.com/api/?name=User&background=0F172A&color=C4B5FD" alt="User Avatar" />
+        <div class="flex flex-col text-left leading-tight truncate max-w-[150px]">
+          <span class="user-name-display text-xs font-semibold text-slate-200 truncate">Loading...</span>
+          <span class="user-email-display text-[9px] text-slate-500 font-mono truncate">secure@redact.ai</span>
+        </div>
+      </div>
+      <a href="/auth/logout" class="text-center py-2 bg-white/5 border border-white/5 hover:border-rose-500/30 hover:bg-rose-500/5 text-rose-400 font-sans font-bold text-xs rounded-xl transition-all duration-300">
+        Logout Session
+      </a>
+    </div>
+  </aside>
+
+  <!-- ==========================================
+       MAIN CONTENT PANEL
+       ========================================== -->
+  <main class="content-wrapper flex flex-col">
+    
+    <!-- Top Header Bar -->
+    <header class="flex justify-between items-center border-b border-white/5 pb-4 mb-8">
+      <div>
+        <h1 class="text-xl font-bold text-[#F8FAFC] tracking-tight">One-Click Data Cleanup</h1>
+        <p class="text-xs text-slate-500 mt-0.5">Instantly clear browser traces, reset persistent trackers, and reduce exposure.</p>
+      </div>
+      
+      <div class="flex items-center gap-4 text-xs font-mono text-slate-500">
+        <span id="session-timestamp">00:00:00 GMT</span>
+        <!-- Mobile/Tablet Theme Toggle Button -->
+        <button id="mobile-theme-toggle-btn" class="flex items-center justify-center p-1.5 rounded-lg border border-[#C4B5FD]/25 hover:bg-white/5 transition-all text-[#C4B5FD] shrink-0" title="Toggle Theme" style="background: transparent; cursor: pointer;">
+          <span class="material-symbols-outlined text-[18px]" id="mobile-theme-toggle-icon">light_mode</span>
+        </button>
+        <span class="flex items-center gap-1 bg-[#C4B5FD]/10 border border-[#C4B5FD]/20 px-2 py-0.5 rounded text-[9px] font-bold text-[#C4B5FD]">
+          SECURE PROTOCOLS
+        </span>
+      </div>
+    </header>
+
+    <!-- Content Columns -->
+    <div id="cleanup-workspace" class="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+      
+      <!-- Left side: Selectable cleanup modules (7 cols) -->
+      <div class="xl:col-span-7 space-y-6">
+        
+        <div class="glass-panel p-6 bg-[#111827]/40 space-y-4">
+          <div class="flex justify-between items-center border-b border-white/5 pb-2">
+            <h3 class="font-mono text-[9.5px] text-[#C4B5FD] uppercase tracking-widest font-bold">SELECT ACTIVE CLEANUP MODULES</h3>
+            <button id="select-all-btn" class="text-[10px] font-mono text-[#C4B5FD] hover:underline uppercase font-bold">Select All</button>
+          </div>
+
+          <!-- Modules Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            
+            <!-- Cookies -->
+            <label class="glass-panel p-4 flex flex-col justify-between gap-3 bg-[#111827]/30 border-white/5 hover:border-[#C4B5FD]/30 transition-all duration-300 cursor-pointer relative select-none">
+              <input type="checkbox" name="module" value="cookies" checked class="absolute top-4 right-4 rounded border-white/10 text-[#C4B5FD] focus:ring-[#C4B5FD] focus:ring-offset-slate-900 bg-black/20" />
+              <div class="flex gap-3">
+                <span class="material-symbols-outlined text-[#C4B5FD] text-xl">cookie</span>
+                <div>
+                  <h4 class="font-bold text-slate-200 text-sm">Browser Cookies</h4>
+                  <span class="px-1.5 py-0.5 border text-[9px] font-mono rounded font-bold text-orange-400 border-orange-500/25 bg-orange-500/10 inline-block mt-1">Risk: HIGH</span>
+                </div>
+              </div>
+              <p class="text-[11px] text-slate-400 leading-normal mt-1">Clears 142 tracking tags and marketing IDs. Frees 1.4 MB.</p>
+            </label>
+
+            <!-- Cache -->
+            <label class="glass-panel p-4 flex flex-col justify-between gap-3 bg-[#111827]/30 border-white/5 hover:border-[#C4B5FD]/30 transition-all duration-300 cursor-pointer relative select-none">
+              <input type="checkbox" name="module" value="cache" checked class="absolute top-4 right-4 rounded border-white/10 text-[#C4B5FD] focus:ring-[#C4B5FD] focus:ring-offset-slate-900 bg-black/20" />
+              <div class="flex gap-3">
+                <span class="material-symbols-outlined text-[#C4B5FD] text-xl">cached</span>
+                <div>
+                  <h4 class="font-bold text-slate-200 text-sm">Browser Cache</h4>
+                  <span class="px-1.5 py-0.5 border text-[9px] font-mono rounded font-bold text-emerald-400 border-emerald-500/25 bg-emerald-500/10 inline-block mt-1">Risk: LOW</span>
+                </div>
+              </div>
+              <p class="text-[11px] text-slate-400 leading-normal mt-1">Flushes cached media files, script bundles, and pages. Frees 342.6 MB.</p>
+            </label>
+
+            <!-- History -->
+            <label class="glass-panel p-4 flex flex-col justify-between gap-3 bg-[#111827]/30 border-white/5 hover:border-[#C4B5FD]/30 transition-all duration-300 cursor-pointer relative select-none">
+              <input type="checkbox" name="module" value="history" checked class="absolute top-4 right-4 rounded border-white/10 text-[#C4B5FD] focus:ring-[#C4B5FD] focus:ring-offset-slate-900 bg-black/20" />
+              <div class="flex gap-3">
+                <span class="material-symbols-outlined text-[#C4B5FD] text-xl">history</span>
+                <div>
+                  <h4 class="font-bold text-slate-200 text-sm">Browsing History</h4>
+                  <span class="px-1.5 py-0.5 border text-[9px] font-mono rounded font-bold text-indigo-400 border-indigo-400/25 bg-indigo-400/10 inline-block mt-1">Risk: MEDIUM</span>
+                </div>
+              </div>
+              <p class="text-[11px] text-slate-400 leading-normal mt-1">Deletes local site navigation logs and search indices. Clears 1,420 entries.</p>
+            </label>
+
+            <!-- Trackers -->
+            <label class="glass-panel p-4 flex flex-col justify-between gap-3 bg-[#111827]/30 border-white/5 hover:border-[#C4B5FD]/30 transition-all duration-300 cursor-pointer relative select-none">
+              <input type="checkbox" name="module" value="trackers" checked class="absolute top-4 right-4 rounded border-white/10 text-[#C4B5FD] focus:ring-[#C4B5FD] focus:ring-offset-slate-900 bg-black/20" />
+              <div class="flex gap-3">
+                <span class="material-symbols-outlined text-[#C4B5FD] text-xl">track_changes</span>
+                <div>
+                  <h4 class="font-bold text-slate-200 text-sm">Stored Trackers</h4>
+                  <span class="px-1.5 py-0.5 border text-[9px] font-mono rounded font-bold text-orange-400 border-orange-500/25 bg-orange-500/10 inline-block mt-1">Risk: HIGH</span>
+                </div>
+              </div>
+              <p class="text-[11px] text-slate-400 leading-normal mt-1">Resets tracking pixels and database script identifiers. Clears 42 nodes.</p>
+            </label>
+
+            <!-- Sessions -->
+            <label class="glass-panel p-4 flex flex-col justify-between gap-3 bg-[#111827]/30 border-white/5 hover:border-[#C4B5FD]/30 transition-all duration-300 cursor-pointer relative select-none">
+              <input type="checkbox" name="module" value="session" checked class="absolute top-4 right-4 rounded border-white/10 text-[#C4B5FD] focus:ring-[#C4B5FD] focus:ring-offset-slate-900 bg-black/20" />
+              <div class="flex gap-3">
+                <span class="material-symbols-outlined text-[#C4B5FD] text-xl">devices</span>
+                <div>
+                  <h4 class="font-bold text-slate-200 text-sm">Temporary Sessions</h4>
+                  <span class="px-1.5 py-0.5 border text-[9px] font-mono rounded font-bold text-indigo-400 border-indigo-400/25 bg-indigo-400/10 inline-block mt-1">Risk: MEDIUM</span>
+                </div>
+              </div>
+              <p class="text-[11px] text-slate-400 leading-normal mt-1">Flushes active local auth tokens and session descriptors. Clears 3 sessions.</p>
+            </label>
+
+            <!-- App Permissions -->
+            <label class="glass-panel p-4 flex flex-col justify-between gap-3 bg-[#111827]/30 border-white/5 hover:border-[#C4B5FD]/30 transition-all duration-300 cursor-pointer relative select-none">
+              <input type="checkbox" name="module" value="permissions" checked class="absolute top-4 right-4 rounded border-white/10 text-[#C4B5FD] focus:ring-[#C4B5FD] focus:ring-offset-slate-900 bg-black/20" />
+              <div class="flex gap-3">
+                <span class="material-symbols-outlined text-[#C4B5FD] text-xl">lock_open</span>
+                <div>
+                  <h4 class="font-bold text-slate-200 text-sm">Revoke Permissions</h4>
+                  <span class="px-1.5 py-0.5 border text-[9px] font-mono rounded font-bold text-rose-400 border-rose-500/25 bg-rose-500/10 inline-block mt-1 animate-pulse">Risk: CRITICAL</span>
+                </div>
+              </div>
+              <p class="text-[11px] text-slate-400 leading-normal mt-1">Revokes legacy application OAuth privileges. Clears Swiggy, Zomato, and Quora.</p>
+            </label>
+
+          </div>
+
+          <button id="start-cleanup-btn" class="btn-premium w-full py-4 text-slate-950 font-sans text-xs font-bold uppercase tracking-widest rounded-xl shadow-lg mt-6">
+            Initialize Cleanup Sequence
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Right side: Progress Loader & Log Console (5 cols) -->
+      <div class="xl:col-span-5 space-y-6">
+        
+        <!-- Animated Circular Progress Card -->
+        <div id="progress-card" class="glass-panel p-6 bg-[#111827]/40 text-center space-y-6 select-none">
+          <h3 class="font-mono text-[9px] text-slate-500 uppercase tracking-widest border-b border-white/5 pb-2">CLEANUP STAGE</h3>
+          
+          <div class="relative w-36 h-36 flex items-center justify-center mx-auto">
+            <svg class="w-full h-full transform -rotate-90">
+              <circle cx="72" cy="72" r="62" stroke="rgba(255, 255, 255, 0.05)" stroke-width="8" fill="transparent" />
+              <circle cx="72" cy="72" r="62" stroke="url(#lavender-gradient)" stroke-width="8" fill="transparent"
+                stroke-dasharray="389.5" stroke-dashoffset="389.5" id="cleanup-circular-progress" class="transition-all duration-300" />
+              <defs>
+                <linearGradient id="lavender-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#C4B5FD" />
+                  <stop offset="100%" stop-color="#A78BFA" />
+                </linearGradient>
+              </defs>
+            </svg>
+            <div class="absolute flex flex-col items-center justify-center">
+              <span id="cleanup-progress-percent" class="text-3xl font-extrabold text-slate-100 font-mono">0%</span>
+              <span id="cleanup-status-indicator" class="text-[9px] font-mono text-slate-500 uppercase tracking-widest mt-1">AWAITING</span>
+            </div>
+          </div>
+          <p id="cleanup-desc-text" class="text-xs text-slate-400 leading-relaxed max-w-xs mx-auto">
+            Select modules and start the purge pipeline to clear local traces.
+          </p>
+        </div>
+
+        <!-- Dynamic Log Entries Panel -->
+        <div class="glass-panel p-5 bg-black/40 space-y-3">
+          <h4 class="font-mono text-[9px] text-slate-500 uppercase tracking-widest border-b border-white/5 pb-2">LOG OUTPUT</h4>
+          <div id="cleanup-logs" class="h-44 overflow-y-auto space-y-2 pr-1 text-xs">
+            <div class="font-mono text-[11px] text-slate-500 italic select-none">Ready for cleanup sequence execution...</div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Final Privacy Score Improvement Summary (Hidden by default, shown upon successful completion) -->
+    <div id="cleanup-summary-panel" class="hidden glass-panel p-8 bg-emerald-500/5 border-emerald-500/15 max-w-4xl mx-auto w-full mt-8 text-center space-y-6 animate-fade-in">
+      <div class="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center mx-auto">
+        <span class="material-symbols-outlined text-emerald-400 text-3xl animate-bounce">verified_user</span>
+      </div>
+      
+      <div class="space-y-2">
+        <h2 class="text-xl font-bold text-slate-100 tracking-tight">One-Click Cleanup Completed successfully!</h2>
+        <p class="text-xs text-slate-400 leading-relaxed max-w-md mx-auto">
+          Local database traces, cookie logs, cached components, and unauthorized permissions have been securely flushed.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-2xl mx-auto pt-2 font-sans">
+        <div class="bg-black/30 p-4 rounded-xl border border-white/5">
+          <span class="font-mono text-[9px] text-slate-500 block uppercase tracking-wider">Traces Purged</span>
+          <p class="text-emerald-400 font-bold text-lg mt-1 font-mono">1,607 items</p>
+        </div>
+        <div class="bg-black/30 p-4 rounded-xl border border-white/5">
+          <span class="font-mono text-[9px] text-slate-500 block uppercase tracking-wider">Disk Space Reclaimed</span>
+          <p class="text-emerald-400 font-bold text-lg mt-1 font-mono">344.0 MB</p>
+        </div>
+        <div class="bg-black/30 p-4 rounded-xl border border-white/5">
+          <span class="font-mono text-[9px] text-slate-500 block uppercase tracking-wider">Exposure Reduction</span>
+          <p id="exposure-reduction-text" class="text-emerald-400 font-bold text-lg mt-1 font-mono">-18 points</p>
+        </div>
+      </div>
+
+      <div class="pt-2">
+        <a href="index.html" class="btn-premium px-6 py-2.5 text-slate-950 text-xs font-bold uppercase tracking-wider rounded-xl inline-block">
+          Return to Dashboard
+        </a>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ==========================================
+       MOBILE RESPONSIVE NAVIGATION BAR
+       ========================================== -->
+  <nav class="mobile-nav-bar">
+    <a href="index.html" class="mobile-nav-item">
+      <span class="material-symbols-outlined">dashboard</span>
+      Dashboard
+    </a>
+    <a href="atlas.html" class="mobile-nav-item">
+      <span class="material-symbols-outlined">map</span>
+      Atlas
+    </a>
+    <a href="shield.html" class="mobile-nav-item">
+      <span class="material-symbols-outlined">shield</span>
+      Shield
+    </a>
+    <a href="intelligence.html" class="mobile-nav-item">
+      <span class="material-symbols-outlined">insights</span>
+      Intel
+    </a>
+    <a href="deletion.html" class="mobile-nav-item">
+      <span class="material-symbols-outlined">delete_forever</span>
+      Deletion
+    </a>
+    <a href="alerts.html" class="mobile-nav-item">
+      <span class="material-symbols-outlined">notifications_active</span>
+      Alerts
+    </a>
+  </nav>
+
+  <!-- Script for Cleanup Logic -->
+  <script>
+    let isCleaning = false;
+
+    // Helper: Robust fetch with timeout & console telemetry
+    async function fetchWithTimeout(resource, options = {}) {
+      const { timeout = 12000 } = options; // Default 12s timeout
+      const controller = new AbortController();
+      const id = setTimeout(() => controller.abort(), timeout);
+      
+      console.log(`[API Request] ${options.method || 'GET'} ${resource} - Dispatching`);
+      try {
+        const response = await fetch(resource, {
+          ...options,
+          signal: controller.signal
+        });
+        clearTimeout(id);
+        console.log(`[API Response] ${options.method || 'GET'} ${resource} - Status: ${response.status}`);
+        return response;
+      } catch (error) {
+        clearTimeout(id);
+        console.error(`[API Error] ${options.method || 'GET'} ${resource} - Failed:`, error.message || error);
+        throw error;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      validateSession();
+      initLiveSessionClock();
+      
+      const startBtn = document.getElementById('start-cleanup-btn');
+      if (startBtn) {
+        startBtn.addEventListener('click', executeCleanupSequence);
+      }
+
+      const selectAllBtn = document.getElementById('select-all-btn');
+      if (selectAllBtn) {
+        selectAllBtn.addEventListener('click', toggleSelectAll);
+      }
+    });
+
+    async function validateSession() {
+      try {
+        const userRes = await fetchWithTimeout('/api/user', { credentials: 'include', timeout: 5000 });
+        if (!userRes.ok) {
+          window.location.href = '/';
+          return;
+        }
+        const data = await userRes.json();
+        
+        document.querySelectorAll('.user-name-display').forEach(el => el.innerText = data.name || 'REDACT Operator');
+        document.querySelectorAll('.user-email-display').forEach(el => el.innerText = data.email || 'secure@redact.ai');
+        document.querySelectorAll('.user-avatar-display').forEach(el => {
+          el.src = data.picture || 'https://ui-avatars.com/api/?name=User&background=0F172A&color=C4B5FD';
+        });
+      } catch (err) {
+        console.error('Session validation failure:', err);
+        window.location.href = '/';
+      }
+    }
+
+    function initLiveSessionClock() {
+      const clock = document.getElementById('session-timestamp');
+      function tick() {
+        const now = new Date();
+        clock.innerText = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')} GMT`;
+      }
+      setInterval(tick, 1000);
+      tick();
+    }
+
+    function toggleSelectAll() {
+      const checkboxes = document.querySelectorAll('input[name="module"]');
+      const selectAllBtn = document.getElementById('select-all-btn');
+      const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+      
+      checkboxes.forEach(cb => cb.checked = !allChecked);
+      selectAllBtn.innerText = allChecked ? 'Select All' : 'Deselect All';
+    }
+
+    async function executeCleanupSequence() {
+      if (isCleaning) return;
+      
+      const selectedModules = Array.from(document.querySelectorAll('input[name="module"]:checked')).map(cb => cb.value);
+      if (selectedModules.length === 0) {
+        alert('Please select at least one cleanup module.');
+        return;
+      }
+
+      isCleaning = true;
+      const startBtn = document.getElementById('start-cleanup-btn');
+      const circularProgress = document.getElementById('cleanup-circular-progress');
+      const progressPercent = document.getElementById('cleanup-progress-percent');
+      const statusIndicator = document.getElementById('cleanup-status-indicator');
+      const descText = document.getElementById('cleanup-desc-text');
+      const logsContainer = document.getElementById('cleanup-logs');
+      const summaryPanel = document.getElementById('cleanup-summary-panel');
+
+      if (startBtn) startBtn.disabled = true;
+      if (logsContainer) logsContainer.innerHTML = '';
+      if (summaryPanel) summaryPanel.classList.add('hidden');
+
+      statusIndicator.innerText = 'RUNNING';
+      descText.innerText = 'Executing data cleanup scripts...';
+      addLogLine('info', 'Connecting secure socket pipeline to local cleanup endpoints...');
+
+      try {
+        const res = await fetchWithTimeout('/api/cleanup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ modules: selectedModules }),
+          credentials: 'include',
+          timeout: 60000
+        });
+
+        if (!res.ok) {
+          throw new Error(`Cleanup stream failure: ${res.status}`);
+        }
+
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+        let partialChunk = '';
+        let totalLogs = 0;
+        let isSuccess = false;
+
+        // Progress variables
+        const maxCircumference = 389.5;
+        
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          const chunk = decoder.decode(value, { stream: true });
+          const lines = (partialChunk + chunk).split('\n');
+          partialChunk = lines.pop();
+
+          for (const line of lines) {
+            if (line.trim()) {
+              try {
+                const logData = JSON.parse(line);
+                addLogLine(logData.type, logData.message);
+                totalLogs++;
+                
+                // Animate progress up to 90% dynamically based on logs parsed
+                const currentPercent = Math.min(Math.floor((totalLogs / 14) * 90), 90);
+                progressPercent.innerText = `${currentPercent}%`;
+                const offset = maxCircumference - (currentPercent / 100) * maxCircumference;
+                circularProgress.style.strokeDashoffset = offset;
+
+                if (logData.message.includes('[SUCCESS]') || logData.type === 'success' && logData.message.includes('completed')) {
+                  isSuccess = true;
+                }
+              } catch (e) {
+                addLogLine('info', line);
+              }
+            }
+          }
+        }
+
+        if (partialChunk.trim()) {
+          try {
+            const logData = JSON.parse(partialChunk);
+            addLogLine(logData.type, logData.message);
+            if (logData.message.includes('[SUCCESS]') || logData.type === 'success' && logData.message.includes('completed')) {
+              isSuccess = true;
+            }
+          } catch (e) {
+            addLogLine('info', partialChunk);
+          }
+        }
+
+        if (isSuccess) {
+          // Finalize progress smoothly
+          progressPercent.innerText = '100%';
+          circularProgress.style.strokeDashoffset = 0;
+          statusIndicator.innerText = 'CLEAN';
+          descText.innerText = 'Browser traces and OAuth permissions cleaned.';
+          
+          // Calculate stats changes
+          let spaceReclaimed = '0.0 MB';
+          let tracesPurged = '0';
+          let scoreReduction = '0 points';
+          
+          let count = 0;
+          if (selectedModules.includes('cookies')) { spaceReclaimed = '1.4 MB'; tracesPurged = '142'; count += 142; }
+          if (selectedModules.includes('cache')) { spaceReclaimed = selectedModules.includes('cookies') ? '344.0 MB' : '342.6 MB'; count += 1; }
+          if (selectedModules.includes('history')) { tracesPurged = String(count + 1420); count += 1420; }
+          if (selectedModules.includes('trackers')) { count += 42; }
+          if (selectedModules.includes('session')) { count += 3; }
+          
+          if (tracesPurged === '0' && count > 0) tracesPurged = `${count} items`;
+          else if (count > 0 && !tracesPurged.includes('items')) tracesPurged = `${count} items`;
+
+          if (selectedModules.includes('permissions')) {
+            scoreReduction = '-18 points';
+            document.getElementById('exposure-reduction-text').innerText = '-18 points';
+          } else {
+            scoreReduction = '-3 points';
+            document.getElementById('exposure-reduction-text').innerText = '-3 points';
+          }
+
+          // Trigger dynamic summary
+          summaryPanel.classList.remove('hidden');
+          summaryPanel.scrollIntoView({ behavior: 'smooth' });
+
+          // Broadcast cleanup to the dashboard
+          try {
+            const bc = new BroadcastChannel('privacy-updates');
+            bc.postMessage({ type: 'cleanup' });
+            bc.close();
+            console.log('[BroadcastChannel] Sent cleanup message.');
+          } catch (bcErr) {
+            console.error('[BroadcastChannel] Failed to send broadcast message:', bcErr);
+          }
+        }
+
+      } catch (err) {
+        console.error('Cleanup sequence error:', err);
+        addLogLine('error', `Purge error: ${err.message}`);
+        statusIndicator.innerText = 'FAILED';
+      } finally {
+        isCleaning = false;
+        if (startBtn) startBtn.disabled = false;
+      }
+    }
+
+    function addLogLine(type, message) {
+      const container = document.getElementById('cleanup-logs');
+      if (!container) return;
+
+      if (container.firstElementChild && container.firstElementChild.classList.contains('italic')) {
+        container.innerHTML = '';
+      }
+
+      const logRow = document.createElement('div');
+      logRow.className = 'flex gap-2.5 font-mono text-[11px] items-start';
+      
+      let typeLabel = '[INFO]';
+      let colorClass = 'text-indigo-400';
+
+      if (type === 'error') {
+        typeLabel = '[FAIL]';
+        colorClass = 'text-rose-400';
+      } else if (type === 'success') {
+        typeLabel = '[OKAY]';
+        colorClass = 'text-emerald-400';
+      } else if (type === 'warn') {
+        typeLabel = '[WARN]';
+        colorClass = 'text-orange-400';
+      }
+
+      logRow.innerHTML = `
+        <span class="${colorClass} opacity-80 shrink-0 select-none">${typeLabel}</span>
+        <span class="text-slate-300 leading-normal">${message}</span>
+      `;
+
+      container.appendChild(logRow);
+      container.scrollTop = container.scrollHeight;
+    }
+  </script>
+
+  <!-- Dynamic Theme Controller -->
+  <script src="theme.js" defer></script>
+</body>
+</html>

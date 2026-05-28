@@ -43,7 +43,53 @@ document.addEventListener('DOMContentLoaded', () => {
   
   validateSession();
   initDashboardControls();
+  initBroadcastListener();
 });
+
+function initBroadcastListener() {
+  try {
+    const channel = new BroadcastChannel('privacy-updates');
+    channel.onmessage = async (event) => {
+      console.log('[BroadcastChannel] Received message:', event.data);
+      if (event.data && (event.data.type === 'purge' || event.data.type === 'cleanup')) {
+        if (event.data.type === 'purge') {
+          const platformToPurge = event.data.platform.toLowerCase().trim();
+          console.log(`[BroadcastChannel] Purging platform card: ${platformToPurge}`);
+          
+          // Find the card element for this platform and fade/slide it out
+          const card = document.querySelector(`[data-platform="${platformToPurge}"]`);
+          if (card) {
+            card.style.transition = 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+            card.style.opacity = '0';
+            card.style.transform = 'scale(0.9) translateY(-10px)';
+            setTimeout(() => {
+              card.remove();
+            }, 500);
+          }
+        } else {
+          console.log(`[BroadcastChannel] Cleanup event received. Refreshing exposure index.`);
+        }
+        
+        // Fetch the updated exposure report from the backend after 500ms
+        setTimeout(async () => {
+          try {
+            const res = await fetchWithTimeout('/api/exposure-report', { credentials: 'include', timeout: 10000 });
+            if (res.ok) {
+              const data = await res.json();
+              state.exposureReport = data;
+              state.detectedPlatforms = data.accounts || [];
+              updateDashboardUI(data);
+            }
+          } catch (err) {
+            console.error('Failed to refetch exposure report after broadcast update:', err);
+          }
+        }, 500);
+      }
+    };
+  } catch (bcErr) {
+    console.error('Failed to initialize BroadcastChannel listener:', bcErr);
+  }
+}
 
 async function validateSession() {
   try {
@@ -389,6 +435,7 @@ function buildPlatformCard(account) {
   const card = document.createElement('div');
   card.className = 'glass-panel flex flex-col gap-4 bg-[#111827]/40 border border-white/8';
   card.style.padding = '24px'; // Premium card padding
+  card.setAttribute('data-platform', key);
   card.innerHTML = `
     <div class="flex justify-between items-start">
       <div class="flex gap-3.5">
@@ -397,52 +444,52 @@ function buildPlatformCard(account) {
         </div>
         <div class="space-y-1">
           <div class="flex items-center gap-2 flex-wrap">
-            <h3 class="card-title text-slate-100" style="font-size: 20px; font-weight: 700;">${displayName}</h3>
+            <h3 class="card-title text-slate-100">${displayName}</h3>
             ${statusBadgeHtml}
           </div>
-          <p class="metadata-text text-[#C4B5FD] uppercase tracking-wider mt-0.5 font-mono" style="font-size: 11px;">${method}</p>
+          <p class="metadata-text text-[#C4B5FD] uppercase tracking-wider mt-0.5 font-mono">${method}</p>
         </div>
       </div>
-      <span class="px-2.5 py-0.5 border font-mono rounded-md tracking-wider ${riskColorClass}" style="font-size: 11px; font-weight: 700;">${account.risk || 'LOW'}</span>
+      <span class="px-2.5 py-0.5 border font-mono rounded-md tracking-wider ${riskColorClass}" style="font-size: 13px; font-weight: 700;">${account.risk || 'LOW'}</span>
     </div>
     
-    <div class="grid grid-cols-2 gap-3.5 border-t border-white/5 pt-3.5" style="font-size: 13px;">
+    <div class="grid grid-cols-2 gap-3.5 border-t border-white/5 pt-3.5" style="font-size: 15px;">
       <div>
-        <span class="metadata-text text-slate-500 uppercase block tracking-wider" style="font-size: 12px; font-weight: 600;">Joined Date</span>
+        <span class="metadata-text text-slate-500 uppercase block tracking-wider" style="font-size: 13px; font-weight: 600;">Joined Date</span>
         <p class="text-slate-300 font-semibold mt-1">${firstDetected}</p>
       </div>
       <div>
-        <span class="metadata-text text-slate-500 uppercase block tracking-wider" style="font-size: 12px; font-weight: 600;">Last Active</span>
+        <span class="metadata-text text-slate-500 uppercase block tracking-wider" style="font-size: 13px; font-weight: 600;">Last Active</span>
         <p class="text-slate-300 font-semibold mt-1">${lastActive}</p>
       </div>
     </div>
 
     <!-- OTP / Device / Location details if present -->
-    <div class="border-t border-white/5 pt-3.5 space-y-2 text-xs">
+    <div class="border-t border-white/5 pt-3.5 space-y-2 text-[14px]">
       ${account.lastOtp ? `
       <div class="flex justify-between items-center bg-white/2 px-3 py-1.5 rounded-lg border border-white/5 font-mono">
         <span class="text-slate-500">Last OTP Received:</span>
         <span class="text-[#C4B5FD] font-bold select-all tracking-wider">${account.lastOtp}</span>
       </div>` : ''}
       <div class="flex justify-between items-center text-slate-400 font-sans">
-        <span class="text-slate-500 font-mono text-[10px] uppercase tracking-wider">Device Auth:</span>
+        <span class="text-slate-500 font-mono text-[12px] uppercase tracking-wider">Device Auth:</span>
         <span class="text-slate-200 font-medium">${account.sourceDevice || 'Web Session'}</span>
       </div>
       <div class="flex justify-between items-center text-slate-400 font-sans">
-        <span class="text-slate-500 font-mono text-[10px] uppercase tracking-wider">Security Location:</span>
+        <span class="text-slate-500 font-mono text-[12px] uppercase tracking-wider">Security Location:</span>
         <span class="text-slate-200 font-medium flex items-center gap-1">
-          <span class="material-symbols-outlined text-[14px] text-rose-400 shrink-0">location_on</span>
+          <span class="material-symbols-outlined text-[16px] text-rose-400 shrink-0">location_on</span>
           ${account.loginLocation || 'Indore, Madhya Pradesh, India'}
         </span>
       </div>
     </div>
     
     <div class="bg-black/20 p-3.5 rounded-xl border border-white/5">
-      <span class="metadata-text text-slate-500 block uppercase tracking-wider" style="font-size: 12px;">Retained Telemetry Data:</span>
-      <p class="body-main text-slate-300 mt-1.5 truncate" style="font-size: 14px;" title="${data.join(', ')}">${data.join(', ')}</p>
+      <span class="metadata-text text-slate-500 block uppercase tracking-wider" style="font-size: 13px;">Retained Telemetry Data:</span>
+      <p class="body-main text-slate-300 mt-1.5 truncate" title="${data.join(', ')}">${data.join(', ')}</p>
     </div>
     
-    <a href="deletion.html?platform=${encodeURIComponent(pName)}" class="btn-premium w-full text-center hover:shadow-lg transition-all duration-300 flex items-center justify-center font-semibold" style="font-size: 15px; padding: 0.875rem 1.5rem;">
+    <a href="deletion.html?platform=${encodeURIComponent(pName)}" class="btn-premium w-full text-center hover:shadow-lg transition-all duration-300 flex items-center justify-center" style="padding: 0.875rem 1.5rem;">
       Authorize Deletion
     </a>
   `;
